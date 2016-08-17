@@ -11,7 +11,9 @@ commands:
 permissions:
   reportwrong.*:
     default: true
-  reportwrong.reportwrong:
-    default: true
-  reportwrong.reportwrong.list:
+#  reportwrong.reportwrong:
+#    default: true
+  reportwrong.list:
+    default: op
+  reportwrong.check:
     default: op

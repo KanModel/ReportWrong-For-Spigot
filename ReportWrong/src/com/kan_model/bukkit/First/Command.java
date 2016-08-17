@@ -27,6 +27,7 @@ public class Command implements CommandExecutor{
     private Inventory mainInv;
     private Inventory confirmInv;
     private Player player;
+    private FileConfiguration lang = ReportWrong.getLang();
 
     private static ItemStack[] mainChest = new ItemStack[]{
             new ItemStack(Material.STONE, 1),
@@ -68,13 +69,12 @@ public class Command implements CommandExecutor{
         if (sender instanceof Player){
             player = (Player) sender;
             if (s.equalsIgnoreCase("rp") || s.equalsIgnoreCase("rw") || s.equalsIgnoreCase("reportwrong")){
-                if (!(player.hasPermission("reportwrong.reportwrong"))) {
-                    player.sendMessage(ChatColor.RED + ReportWrong.RW + "你没权限reportwrong.*哦=。=");
+                if (!(player.hasPermission("reportwrong.*"))) {
+                    player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.*");
                     return true;
                 } else {
-                    mainInv = Bukkit.createInventory(player, 9,ChatColor.RED + "ReportWrong主界面");
-                    confirmInv = Bukkit.createInventory(player, 9,ChatColor.ITALIC + "ReportWrong确认界面");
-
+                    mainInv = Bukkit.createInventory(player, 9,ChatColor.RED + lang.getString("gui.main"));
+                    confirmInv = Bukkit.createInventory(player, 9,ChatColor.ITALIC + lang.getString("gui.confirm"));
                     if (args.length == 0 ||(args.length > 0 && args[0].equalsIgnoreCase("?"))) {
                         ReportWrong.ShowHelp(sender);
                         return true;
@@ -86,7 +86,7 @@ public class Command implements CommandExecutor{
                         player.openInventory(mainInv);
                         return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("list")){
-                        if (player.hasPermission("reportwrong.reportwrong.list")) {
+                        if (player.hasPermission("reportwrong.list")) {
 //                            Location
 //                            World
                             try {
@@ -95,7 +95,8 @@ public class Command implements CommandExecutor{
                                 player.sendMessage(ChatColor.RED + ReportWrong.RW + "获取失败!");
                             }
                         }else {
-                            player.sendMessage(ChatColor.RED + ReportWrong.RW + "你没权限reportwrong.reportwrong.list哦=。=");
+                            player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.list");
+                            return true;
                         }
                         return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("version")){
@@ -104,9 +105,9 @@ public class Command implements CommandExecutor{
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("reward")) {
 //                        co = main.getMyConfig();
                         if (co.contains("RewardDefault") && co.contains("RewardItem") && co.contains("RewardCount")) {
-                            player.sendMessage(ReportWrong.RW + "是否开启举报回报：" + main.getMyConfig().getString("RewardDefault"));
-                            player.sendMessage(ReportWrong.RW + "举报回报物品：" + main.getMyConfig().getString("RewardItem"));
-                            player.sendMessage(ReportWrong.RW + "回报数量" + main.getMyConfig().getInt("RewardCount"));
+                            player.sendMessage(ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.switch") + co.getBoolean("RewardDefault"));
+                            player.sendMessage(ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.item") + co.getString("RewardItem"));
+                            player.sendMessage(ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.count") + co.getInt("RewardCount"));
                             return true;
 //                            RewardDefault: true
 //                            RewardItem: Diamond
@@ -133,9 +134,9 @@ public class Command implements CommandExecutor{
 //                            } catch (IOException e) {
 //                                e.printStackTrace();
 //                            }
-                            player.sendMessage(ReportWrong.RW + "是否开启举报回报：" + co.getBoolean("RewardDefault"));
-                            player.sendMessage(ReportWrong.RW + "举报回报物品：" + co.getString("RewardItem"));
-                            player.sendMessage(ReportWrong.RW + "回报数量" + co.getInt("RewardCount"));
+                            player.sendMessage(ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.switch") + co.getBoolean("RewardDefault"));
+                            player.sendMessage(ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.item") + co.getString("RewardItem"));
+                            player.sendMessage(ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.count") + co.getInt("RewardCount"));
                             return true;
                         }
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("reload")){
@@ -145,19 +146,24 @@ public class Command implements CommandExecutor{
                         return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("check")){
 //                        Integer.parseInt([String])
-                        if (args.length >= 2 && isInt(args[1])){
-                            try {
-                                ResultSet rs = SaveSql.checkReport(Integer.parseInt(args[1]));
-                                player.teleport(new Location(Bukkit.getWorld(rs.getString("world")),rs.getInt("x"),rs.getInt("y"),rs.getInt("z")));
-                                player.sendMessage(ChatColor.GREEN + ReportWrong.RW + "进行检查id:[" + rs.getInt("id") + "]的举报");
-                            } catch (SQLException e) {
-                                player.sendMessage(ChatColor.RED + ReportWrong.RW + "检查失败！");
-                                e.printStackTrace();
+                        if (player.hasPermission("reportwrong.check")) {
+                            if (args.length >= 2 && isInt(args[1])) {
+                                try {
+                                    ResultSet rs = SaveSql.checkReport(Integer.parseInt(args[1]));
+                                    player.teleport(new Location(Bukkit.getWorld(rs.getString("world")), rs.getInt("x"), rs.getInt("y"), rs.getInt("z")));
+                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.check") + "id:[" + rs.getInt("id") + "]");
+                                } catch (SQLException e) {
+                                    player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                sender.sendMessage(ReportWrong.RW + ChatColor.RED + lang.getString("check.id"));
+                                return true;
                             }
+                            return true;
                         }else {
-                            sender.sendMessage(ReportWrong.RW + "请输入举报id");
+                            player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.check");
                         }
-                        return true;
                     }else {
                         ReportWrong.ShowHelp(sender);
                         return true;
@@ -169,11 +175,11 @@ public class Command implements CommandExecutor{
         }else {
             if (args.length > 0 && args[0].equalsIgnoreCase("reload")){
                 main.reloadSetting();
-                sender.sendMessage(ReportWrong.RW + "成功重载配置");
+                sender.sendMessage(ReportWrong.RW + lang.getString("reload"));
                 return true;
             }else {
                 ReportWrong.ShowHelp(sender);
-                sender.sendMessage(ReportWrong.RW + "控制台不能使用此指令！");
+                sender.sendMessage(ReportWrong.RW + lang.getString("consle"));
                 return true;
             }
         }

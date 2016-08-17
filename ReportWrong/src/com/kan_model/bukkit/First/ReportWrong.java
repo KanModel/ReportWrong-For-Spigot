@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.libs.org.ibex.nestedvm.util.Seekable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -23,6 +22,7 @@ public class ReportWrong extends JavaPlugin {
     private File configFile;
     private File langFile;
     private FileConfiguration config;
+    private static FileConfiguration lang;
     private SaveSql sql;
 
     @Override
@@ -32,12 +32,14 @@ public class ReportWrong extends JavaPlugin {
         langFile = new File(getDataFolder(),"lang.yml");
         this.saveMoreConfig(langFile.getName());
 //        this.reloadConfig();
+        lang = this.reloadSetting(langFile);
         try {
             this.reloadSetting();
-            this.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + RW + "加载成功！");
+//            this.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + RW + "加载成功！");
+            this.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + RW + lang.getString("LoadSuccess"));
         }catch (Exception e){
 //            this.getLogger().info("加载失败!");
-            this.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + RW + ChatColor.RED +"加载失败！");
+            this.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + RW + ChatColor.RED +lang.getString("LoadFailure"));
         }
         this.getCommand("reportwrong").setExecutor(new Command(this));
         this.getServer().getPluginManager().registerEvents(new GuiListener(),this);
@@ -63,10 +65,11 @@ public class ReportWrong extends JavaPlugin {
 //        saveConfig();
         try {
             config.save(configFile);
-            this.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + RW + "保存成功！");
+            lang.save(langFile);
+            this.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + RW + lang.getString("SaveSuccess"));
         } catch (IOException e1) {
             e1.printStackTrace();
-            this.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + RW + ChatColor.RED +"保存失败！");
+            this.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + RW + ChatColor.RED +lang.getString("SaveFailure"));
         }
         try {
             SaveSql.getConnection().close();
@@ -80,7 +83,7 @@ public class ReportWrong extends JavaPlugin {
     }
 
     public FileConfiguration reloadSetting(File file){
-        return config = YamlConfiguration.loadConfiguration(file);
+        return YamlConfiguration.loadConfiguration(file);
     }
 //    public FileConfiguration reloadSetting()
 //    {
@@ -101,14 +104,14 @@ public class ReportWrong extends JavaPlugin {
 
     public static void ShowHelp(CommandSender sender){
         sender.sendMessage(ChatColor.LIGHT_PURPLE + "----------[ReportWrong]-----------");
-        sender.sendMessage(ChatColor.GOLD + "/reportwrong 等于/rw");
-        sender.sendMessage(ChatColor.GREEN + "/reportwrong ? 获取帮助");
-        sender.sendMessage(ChatColor.GREEN + "/reportwrong gui 打开箱子操作面板");
-        sender.sendMessage(ChatColor.GREEN + "/reportwrong list 查询已有举报");
-        sender.sendMessage(ChatColor.GREEN + "/reportwrong check [举报id] 检查举报");
-        sender.sendMessage(ChatColor.GREEN + "/reportwrong reward 查看奖励信息");
-        sender.sendMessage(ChatColor.GREEN + "/reportwrong reload 重载配置文件");
-        sender.sendMessage(ChatColor.GREEN + "/reportwrong version 查看ReportWrong版本");
+        sender.sendMessage(ChatColor.GOLD + lang.getString("help.1"));
+        sender.sendMessage(ChatColor.GREEN + lang.getString("help.2"));
+        sender.sendMessage(ChatColor.GREEN + lang.getString("help.3"));
+        sender.sendMessage(ChatColor.GREEN + lang.getString("help.4"));
+        sender.sendMessage(ChatColor.GREEN + lang.getString("help.5"));
+        sender.sendMessage(ChatColor.GREEN + lang.getString("help.6"));
+        sender.sendMessage(ChatColor.GREEN + lang.getString("help.7"));
+        sender.sendMessage(ChatColor.GREEN + lang.getString("help.8"));
     }
 
     public FileConfiguration getMyConfig() {
@@ -128,6 +131,9 @@ public class ReportWrong extends JavaPlugin {
         }
     }
 
+    public static FileConfiguration getLang() {
+        return lang;
+    }
 
     //    public FileConfiguration getRWConfig() {
 //        return config;
