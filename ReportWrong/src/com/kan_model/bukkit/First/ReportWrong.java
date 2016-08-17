@@ -17,7 +17,6 @@ import java.sql.SQLException;
  */
 public class ReportWrong extends JavaPlugin {
 
-//    private DatabaseMetaData sql;
     public static final String RW = "[ReportWrong]";
     private File configFile;
     private File langFile;
