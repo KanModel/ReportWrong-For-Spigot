@@ -1,0 +1,17 @@
+name: ReportWrong
+main: com.kan_model.bukkit.First.ReportWrong
+version: 0.0.1
+commands:
+  reportwrong:
+    usage: /repotrwrong 获取更多帮助
+    description: 获取更多帮助
+   # permission: jff.jsf
+    permission-message: §c你没有权限！
+    aliases: [rw,rp]
+permissions:
+  reportwrong.*:
+    default: true
+  reportwrong.reportwrong:
+    default: true
+  reportwrong.reportwrong.list:
+    default: op
