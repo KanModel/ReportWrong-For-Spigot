@@ -5,7 +5,7 @@ commands:
   reportwrong:
     usage: /repotrwrong 获取更多帮助
     description: 获取更多帮助
-    permission-message: §c你没有权限！
+    permission-message: 你没有权限！
     aliases: [rw,rp]
 permissions:
   reportwrong.*:

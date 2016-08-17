@@ -14,6 +14,7 @@ import java.sql.SQLException;
 
 /**
  * Created by kgdwhsk on 2016/8/15.
+ *
  */
 public class ReportWrong extends JavaPlugin {
 
