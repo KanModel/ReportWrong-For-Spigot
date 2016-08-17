@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -73,7 +74,7 @@ public class Command implements CommandExecutor{
                     player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.*");
                     return true;
                 } else {
-                    mainInv = Bukkit.createInventory(player, 9,ChatColor.RED + lang.getString("gui.main"));
+                    mainInv = Bukkit.createInventory((InventoryHolder) player, 9,ChatColor.RED + lang.getString("gui.main"));
                     confirmInv = Bukkit.createInventory(player, 9,ChatColor.ITALIC + lang.getString("gui.confirm"));
                     if (args.length == 0 ||(args.length > 0 && args[0].equalsIgnoreCase("?"))) {
                         ReportWrong.ShowHelp(sender);

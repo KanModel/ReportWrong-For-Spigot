@@ -45,7 +45,7 @@ public class SaveSql {
 //            sender.sendMessage(main.getDataFolder().toString() +"/rwdatabase.db");
             connection = DriverManager.getConnection("jdbc:sqlite:plugins/ReportWrong/rwdatabase.db");
             statement = connection.createStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS 'rwlist'('id' INT NOT NULL,'name' VARCHAR(32) NOT NULL,'world' VARCHAR(32) NOT NULL,'x' INT NOT NULL ,'y' INT NOT NULL ,'z' INT NOT NULL ,'more' VARCHAR DEFAULT '无')");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS 'rwlist'('id' INT NOT NULL,'name' VARCHAR(32) NOT NULL,'world' VARCHAR(32) NOT NULL,'x' INT NOT NULL ,'y' INT NOT NULL ,'z' INT NOT NULL ,'Rtype' INT NOT NULL ,'playerword' VARCHAR DEFAULT 'None','complete' INT DEFAULT 0,'adminword' VARCHAR DEFAULT 'None')");
 //                statement.executeUpdate("CREATE TABLE IF NOT EXISTS rwlist(" +
 //                        "id INT NOT NULL," +
 //                        "name VARCHAR(32) NOT NULL," +
@@ -78,7 +78,7 @@ public class SaveSql {
         }
     }
 
-    public static boolean addReport(String playerName, String world, int x, int y, int z){
+    public static boolean addReport(String playerName, String world, int x, int y, int z,int type){
         boolean s = false;
         try {
 //            select count(*) from [table_name]
@@ -87,7 +87,8 @@ public class SaveSql {
 //            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT COUNT(id) FROM 'rwlist'");
             int id = resultSet.getInt(1) + 1;
-            statement.executeUpdate("INSERT INTO rwlist VALUES (" + id + ",'" + playerName + "','" + world + "'," + x + "," + y + "," + z + ",'无详细')");
+            statement.executeUpdate("INSERT INTO rwlist (id, name, world, x, y, z,Rtype) VALUES (" + id + ",'" + playerName + "','" + world + "'," + x + "," + y + "," + z + "," + type + ");");
+//            statement.executeUpdate("INSERT INTO rwlist VALUES (" + id + ",'" + playerName + "','" + world + "'," + x + "," + y + "," + z + ",'NULL',0,'NULL'");
             s = true;
         } catch (SQLException e) {
             e.printStackTrace();
