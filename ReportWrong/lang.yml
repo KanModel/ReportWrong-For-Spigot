@@ -4,14 +4,23 @@ LoadFailure: '加载失败！'
 SaveSuccess: '保存成功！'
 SaveFailure: '保存失败！'
 help:
-  1: '/reportwrong 等于/rw 或者 /rp'
-  2: '/reportwrong ? 获取帮助'
-  3: '/reportwrong gui 打开箱子操作面板'
-  4: '/reportwrong list 查询已有举报'
-  5: '/reportwrong check [举报id] 检查举报'
-  6: '/reportwrong reward 查看奖励信息'
-  7: '/reportwrong reload 重载配置文件'
-  8: '/reportwrong version 查看ReportWrong版本'
+  - '/reportwrong 等于/rw 或者 /rp'
+  - '/reportwrong ? 获取帮助'
+  - '/reportwrong gui 打开箱子操作面板'
+  - '/reportwrong list 查询已有举报'
+  - '/reportwrong check [举报id] 检查举报'
+  - '/reportwrong deal [举报id] 解决举报'
+  - '/reportwrong reward 查看奖励信息'
+  - '/reportwrong reload 重载配置文件'
+  - '/reportwrong version 查看ReportWrong版本'
+#  1: '/reportwrong 等于/rw 或者 /rp'
+#  2: '/reportwrong ? 获取帮助'
+#  3: '/reportwrong gui 打开箱子操作面板'
+#  4: '/reportwrong list 查询已有举报'
+#  5: '/reportwrong check [举报id] 检查举报'
+#  6: '/reportwrong reward 查看奖励信息'
+#  7: '/reportwrong reload 重载配置文件'
+#  8: '/reportwrong version 查看ReportWrong版本'
 permission:
   not: '你没有权限:'
 gui:
@@ -40,8 +49,10 @@ reward:
 check:
   check: '进行检查'
 #  Extra ues in list failure
-  failure: '检查失败！'
+#  Extra ues in complete failure
+  failure: '失败！'
   id: '请输入举报id'
+  deal: '解决举报'
 consle: '控制台不能使用此指令！'
 reload: '成功重载配置'
 report:

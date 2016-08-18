@@ -1,6 +1,7 @@
 name: ReportWrong
 main: com.kan_model.bukkit.First.ReportWrong
-version: beta0.0.1
+version: ' beta0.0.1'
+author: kan_model
 commands:
   reportwrong:
     usage: /repotrwrong 获取更多帮助
@@ -13,4 +14,6 @@ permissions:
   reportwrong.list:
     default: op
   reportwrong.check:
+    default: op
+  reportwrong.deal:
     default: op

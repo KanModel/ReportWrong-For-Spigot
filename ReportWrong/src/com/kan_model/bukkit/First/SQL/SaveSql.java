@@ -45,7 +45,10 @@ public class SaveSql {
 //            sender.sendMessage(main.getDataFolder().toString() +"/rwdatabase.db");
             connection = DriverManager.getConnection("jdbc:sqlite:plugins/ReportWrong/rwdatabase.db");
             statement = connection.createStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS 'rwlist'('id' INT NOT NULL,'name' VARCHAR(32) NOT NULL,'world' VARCHAR(32) NOT NULL,'x' INT NOT NULL ,'y' INT NOT NULL ,'z' INT NOT NULL ,'Rtype' INT NOT NULL ,'playerword' VARCHAR DEFAULT 'None','complete' INT DEFAULT 0,'adminword' VARCHAR DEFAULT 'None')");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS 'rwlist'('id' INT NOT NULL,'name' VARCHAR(32) NOT NULL," +
+                    "'world' VARCHAR(32) NOT NULL,'x' INT NOT NULL ,'y' INT NOT NULL ,'z' INT NOT NULL ,'Rtype' INT NOT NULL ," +
+                    "'playerword' VARCHAR DEFAULT 'None','complete' INT DEFAULT 0,'adminword' VARCHAR DEFAULT 'None')");
+//                    "'playerword' VARCHAR DEFAULT 'None','complete' INT DEFAULT 0,'adminword' VARCHAR DEFAULT 'None','time' smalldatetime)");
 //                statement.executeUpdate("CREATE TABLE IF NOT EXISTS rwlist(" +
 //                        "id INT NOT NULL," +
 //                        "name VARCHAR(32) NOT NULL," +
@@ -68,13 +71,13 @@ public class SaveSql {
 
     public void addArgs(CommandSender sender, FileConfiguration config, String name, Object value){
         config.set(name,value);
-        sender.sendMessage(ReportWrong.RW + ChatColor.RED + "缺少参数" + name);
+//        sender.sendMessage(ReportWrong.RW + ChatColor.RED + "缺少参数" + name);
         try {
             config.save(new File(main.getDataFolder(),"config.yml"));
-            sender.sendMessage(ReportWrong.RW + ChatColor.GREEN + "成功添加参数" + name);
+//            sender.sendMessage(ReportWrong.RW + ChatColor.GREEN + "成功添加参数" + name);
         } catch (IOException e) {
             e.printStackTrace();
-            sender.sendMessage(ReportWrong.RW + ChatColor.RED + "添加参数" + name + "失败");
+//            sender.sendMessage(ReportWrong.RW + ChatColor.RED + "添加参数" + name + "失败");
         }
     }
 
@@ -103,7 +106,7 @@ public class SaveSql {
 //            statement = connection.createStatement();
 //            ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM 'rwlist'");
 //            rs.next();
-            ResultSet rs = statement.executeQuery("SELECT * FROM rwlist;");
+            ResultSet rs = statement.executeQuery("SELECT * FROM rwlist WHERE complete = 0;");
             while (rs.next()){
                 sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + " " + rs.getInt("id") +" 玩家[" + rs.getString("name") + "]举报世界[" + rs.getString("world") +
                 "] x:" + rs.getInt("x") + " y:" + rs.getInt("y") + " z:" + rs.getInt("z"));
@@ -139,6 +142,17 @@ public class SaveSql {
     public static ResultSet checkReport(int id) throws SQLException {
         ResultSet rs = statement.executeQuery("SELECT * FROM rwlist WHERE id = " + id + ";");
         return rs;
+    }
+
+    public static void setCompleted(ResultSet resultSet,int id){
+        try {
+//            ResultSet rs = statement.executeQuery("SELECT * FROM rwlist WHERE id = " + id + ";");
+//            UPDATE Person SET Address = 'Zhongshan 23', City = 'Nanjing'
+//            WHERE LastName = 'Wilson'
+            statement.executeUpdate("UPDATE rwlist SET complete = 1 WHERE id = " + id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static SaveSql getSaveSql() {

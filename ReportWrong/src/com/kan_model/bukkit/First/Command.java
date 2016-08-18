@@ -171,6 +171,22 @@ public class Command implements CommandExecutor{
                         }else {
                             player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.check");
                         }
+                    }else if (args.length > 0 && args[0].equalsIgnoreCase("deal")){
+                        if (player.hasPermission("reportwrong.deal")) {
+                            if (args.length >= 2 && isInt(args[1])) {
+                                try {
+                                    int id = Integer.parseInt(args[1]);
+                                    ResultSet rs = SaveSql.checkReport(id);
+                                    SaveSql.setCompleted(rs,id);
+                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.deal") + "[" + id + "]");
+                                } catch (SQLException e) {
+                                    player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
+                                }
+                            }
+                            return true;
+                        }else {
+                            player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.deal");
+                        }
                     }else {
                         ReportWrong.ShowHelp(sender);
                         return true;

@@ -123,7 +123,7 @@ public class GuiListener implements Listener{
                         }
                         player.closeInventory();
                     } else if (targetItem.isSimilar(Command.getConfirmChest()[1])) {
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.c.deny"));
+                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.c.deny"));
 //                    player.closeInventory();
                         mainInv = Bukkit.createInventory(player, 9, ChatColor.RED + lang.getString("gui.main"));
                         for (ItemStack x : Command.getMainChest()) {
@@ -131,7 +131,7 @@ public class GuiListener implements Listener{
                         }
                         player.openInventory(mainInv);
                     } else if (targetItem.isSimilar(Command.getConfirmChest()[2])) {
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.c.more"));
+                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.c.more"));
                         player.closeInventory();
                     }
                 }
