@@ -159,15 +159,21 @@ public class SaveSql {
         return rs;
     }
 
-    public static void setCompleted(ResultSet resultSet,int id){
+    public static boolean setCompleted(ResultSet resultSet,int id){
         try {
 //            ResultSet rs = statement.executeQuery("SELECT * FROM rwlist WHERE id = " + id + ";");
 //            UPDATE Person SET Address = 'Zhongshan 23', City = 'Nanjing'
 //            WHERE LastName = 'Wilson'
-            statement.executeUpdate("UPDATE rwlist SET complete = 1 WHERE id = " + id);
+            if (resultSet.getInt("complete") == 0) {
+                statement.executeUpdate("UPDATE rwlist SET complete = 1 WHERE id = " + id);
+                return true;
+            }else {
+                return false;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public static SaveSql getSaveSql() {

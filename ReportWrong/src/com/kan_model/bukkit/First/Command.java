@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
@@ -174,13 +175,55 @@ public class Command implements CommandExecutor{
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("deal")){
                         if (player.hasPermission("reportwrong.deal")) {
                             if (args.length >= 2 && isInt(args[1])) {
-                                try {
-                                    int id = Integer.parseInt(args[1]);
-                                    ResultSet rs = SaveSql.checkReport(id);
-                                    SaveSql.setCompleted(rs,id);
-                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.deal") + "[" + id + "]");
-                                } catch (SQLException e) {
-                                    player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
+                                if (args.length >= 3 && args[2].equalsIgnoreCase("c")) {
+                                    try {
+                                        int id = Integer.parseInt(args[1]);
+                                        ResultSet rs = SaveSql.checkReport(id);
+                                        boolean success = SaveSql.setCompleted(rs, id);
+//                                        player.sendMessage(ChatColor.RED + ReportWrong.RW + "c");
+                                        if (success) {
+                                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.deal") + "[" + id + "]");
+                                        }else {
+                                            player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
+                                            player.sendMessage(ChatColor.RED + ReportWrong.RW + "ccccc");
+                                        }
+                                    } catch (SQLException e) {
+                                        player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
+                                        e.printStackTrace();
+                                    }
+                                }else {
+//                                    player.sendMessage(ChatColor.RED + ReportWrong.RW + "bushic");
+                                    try {
+                                        int id = Integer.parseInt(args[1]);
+                                        ResultSet rs = SaveSql.checkReport(id);
+//                                        SaveSql.setCompleted(rs, id);
+                                        boolean success = SaveSql.setCompleted(rs, id);
+                                        if (success) {
+                                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.deal") + "[" + id + "]");
+                                            rs = SaveSql.checkReport(id);
+                                            Player rewardPlayer = Bukkit.getPlayer(rs.getString("name"));
+                                            if (rewardPlayer != null) {
+                                                if (isInt((int)co.get("RewardItem"))) {
+                                                    rewardPlayer.getInventory().addItem(
+                                                            new ItemStack(Material.getMaterial(co.getInt("RewardItem")),co.getInt("RewardCount")));
+                                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.reward"));
+                                                } else {
+                                                    String item = co.getString("RewardItem").toUpperCase();
+                                                    rewardPlayer.getInventory().addItem(
+                                                            new ItemStack(Material.getMaterial(item),co.getInt("RewardCount")));
+                                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.reward"));
+                                                }
+                                            } else {
+                                                player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
+                                                player.sendMessage(ChatColor.RED + ReportWrong.RW + "rewardPlayer != null");
+                                            }
+                                        }else {
+                                            player.sendMessage(ChatColor.RED + ReportWrong.RW + "已经解决");
+                                        }
+                                    } catch (SQLException e) {
+                                        player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                             return true;
@@ -198,6 +241,7 @@ public class Command implements CommandExecutor{
         }else {
             if (args.length > 0 && args[0].equalsIgnoreCase("reload")){
                 main.reloadSetting();
+                co = main.getMyConfig();
                 sender.sendMessage(ReportWrong.RW + lang.getString("reload"));
                 return true;
             }else {
@@ -242,9 +286,9 @@ public class Command implements CommandExecutor{
         }
     }
 
-    private boolean isInt(String args){
+    private boolean isInt(Object args){
         try{
-            Integer.parseInt(args);
+            Integer.parseInt((String)args);
             return true;
         }catch (Exception e){
             return false;

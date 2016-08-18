@@ -9,7 +9,7 @@ help:
   - '/reportwrong gui 打开箱子操作面板'
   - '/reportwrong list 查询已有举报'
   - '/reportwrong check [举报id] 检查举报'
-  - '/reportwrong deal [举报id] 解决举报'
+  - '/reportwrong deal [举报id] [空 给予回报/c 关闭]解决举报'
   - '/reportwrong reward 查看奖励信息'
   - '/reportwrong reload 重载配置文件'
   - '/reportwrong version 查看ReportWrong版本'
@@ -53,6 +53,7 @@ check:
   failure: '失败！'
   id: '请输入举报id'
   deal: '解决举报'
+  reward: "给予回报成功"
 consle: '控制台不能使用此指令！'
 reload: '成功重载配置'
 report:
