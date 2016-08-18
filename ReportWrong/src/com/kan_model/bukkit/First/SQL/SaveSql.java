@@ -10,6 +10,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
@@ -47,8 +49,11 @@ public class SaveSql {
             statement = connection.createStatement();
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS 'rwlist'('id' INT NOT NULL,'name' VARCHAR(32) NOT NULL," +
                     "'world' VARCHAR(32) NOT NULL,'x' INT NOT NULL ,'y' INT NOT NULL ,'z' INT NOT NULL ,'Rtype' INT NOT NULL ," +
-                    "'playerword' VARCHAR DEFAULT 'None','complete' INT DEFAULT 0,'adminword' VARCHAR DEFAULT 'None')");
-//                    "'playerword' VARCHAR DEFAULT 'None','complete' INT DEFAULT 0,'adminword' VARCHAR DEFAULT 'None','time' smalldatetime)");
+//                    "'playerword' VARCHAR DEFAULT 'None','complete' INT DEFAULT 0,'adminword' VARCHAR DEFAULT 'None')");
+                    "'playerword' VARCHAR DEFAULT 'None','complete' INT DEFAULT 0,'adminword' VARCHAR DEFAULT 'None'," +
+                    "'ctime' VARCHAR NOT NULL ,'UUID' VARCHAR DEFAULT 'None')");
+//                    "'time' TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
+//                    "'playerword' VARCHAR DEFAULT 'None','complete' INT DEFAULT 0,'adminword' VARCHAR DEFAULT 'None','time' DATETIME_INTERVAL_CODE )");
 //                statement.executeUpdate("CREATE TABLE IF NOT EXISTS rwlist(" +
 //                        "id INT NOT NULL," +
 //                        "name VARCHAR(32) NOT NULL," +
@@ -81,8 +86,10 @@ public class SaveSql {
         }
     }
 
-    public static boolean addReport(String playerName, String world, int x, int y, int z,int type){
+    public static boolean addReport(String playerName, String world, int x, int y, int z,int type ,String cotime){
         boolean s = false;
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+//        String time = df.format(new Date());// new Date()为获取当前系统时间
         try {
 //            select count(*) from [table_name]
 //            String sql = (new StringBuilder("select * from qiandao where player='")).append(p.getName()).append("' ").toString();
@@ -90,8 +97,8 @@ public class SaveSql {
 //            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT COUNT(id) FROM 'rwlist'");
             int id = resultSet.getInt(1) + 1;
-            statement.executeUpdate("INSERT INTO rwlist (id, name, world, x, y, z,Rtype) VALUES (" + id + ",'" + playerName + "','" + world + "'," + x + "," + y + "," + z + "," + type + ");");
-//            statement.executeUpdate("INSERT INTO rwlist VALUES (" + id + ",'" + playerName + "','" + world + "'," + x + "," + y + "," + z + ",'NULL',0,'NULL'");
+            statement.executeUpdate("INSERT INTO rwlist (id, name, world, x, y, z,Rtype,ctime) VALUES (" + id + ",'"
+                    + playerName + "','" + world + "'," + x + "," + y + "," + z + "," + type + ",'" + cotime + "');");
             s = true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -107,8 +114,16 @@ public class SaveSql {
 //            ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM 'rwlist'");
 //            rs.next();
             ResultSet rs = statement.executeQuery("SELECT * FROM rwlist WHERE complete = 0;");
+//            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+//            String time = df.format(rs.getTimestamp("time"));
+            String time;
             while (rs.next()){
-                sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + " " + rs.getInt("id") +" 玩家[" + rs.getString("name") + "]举报世界[" + rs.getString("world") +
+//                time = new java.util.Date(rs.getTimestamp("time").getTime()).toLocaleString();
+//                time = rs.getDate("time").toLocaleString();
+                time = rs.getString("ctime");
+                rs.getInt("Rtype");
+                sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + " " + rs.getInt("id") + " " + time + " 玩家[" +
+                        rs.getString("name") + "]举报世界[" + rs.getString("world") +
                 "] x:" + rs.getInt("x") + " y:" + rs.getInt("y") + " z:" + rs.getInt("z"));
             }
 //            int maxId = rs.getInt("id") + 1;

@@ -95,7 +95,7 @@ public class Command implements CommandExecutor{
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("list")){
                         if (player.hasPermission("reportwrong.list")) {
                             try {
-                                player.sendMessage(ChatColor.GOLD + "------" + ReportWrong.RW + "List ------" );
+                                player.sendMessage(ChatColor.GOLD + "-----------------------------" + ReportWrong.RW + "List -----------------------------" );
                                 SaveSql.listReport(player);
                             }catch (Exception e){
                                 player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));

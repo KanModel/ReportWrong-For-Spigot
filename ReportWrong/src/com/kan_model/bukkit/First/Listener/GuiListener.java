@@ -15,6 +15,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by kgdwhsk on 2016/8/15.
  */
@@ -104,18 +107,22 @@ public class GuiListener implements Listener{
                         int x = player.getLocation().getBlockX();
                         int y = player.getLocation().getBlockY();
                         int z = player.getLocation().getBlockZ();
-                        if (SaveSql.addReport(player.getName(), world, x, y, z,Type)) {
+//                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+//                        String time = df.format(new Date());// new Date()为获取当前系统时间
+                        String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+//                        player.sendMessage(time);
+                        if (SaveSql.addReport(player.getName(), world, x, y, z,Type,time)) {
                             switch (Type) {
                                 case THEFT:
-                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + lang.getString("gui.c.confirm.theft")
+                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time + lang.getString("gui.c.confirm.theft")
                                             + world + " [X]:" + x + " [Y]:" + y + " [Z]:" + z);
                                     break;
                                 case DESTROY:
-                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + lang.getString("gui.c.confirm.destroy")
+                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time + lang.getString("gui.c.confirm.destroy")
                                             + world + " [X]:" + x + " [Y]:" + y + " [Z]:" + z);
                                     break;
                                 case SBUG:
-                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + lang.getString("gui.c.confirm.sbug"));
+                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time + lang.getString("gui.c.confirm.sbug"));
                                     break;
                             }
                         } else {
