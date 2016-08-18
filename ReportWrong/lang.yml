@@ -17,13 +17,40 @@ permission:
 gui:
   main: 'ReportWrong主界面'
   confirm: 'ReportWrong确认界面'
+  m:
+    theft: '你选择了举报[THEFT]'
+    destroy: '你选择了举报[DESTROY]'
+    sbug: '你选择了举报服务器Bug'
+    confirm:
+      theft: '确定此处发生偷窃？选择木棍确定，选择指南针返回,选择书本提交详细信息！'
+      destroy: '确定此处发生破坏？选择木棍确定，选择指南针返回,选择书本提交详细信息！'
+      sbug: '发现服务器有Bug？选择书本提交详细信息，选择指南针返回！'
+  c:
+    confirm:
+      theft: '举报[THEFT]当前位置成功! [世界] '
+      destroy: '举报[DESTROY]当前位置成功! [世界] '
+      sbug: '举报[BUG]成功'
+      failure: '举报失败!'
+    deny: '取消了此次举报!'
+    more: '请输入详细信息'
 reward:
   switch: '是否开启举报回报:'
   item: '举报回报物品:'
   count: '回报数量:'
 check:
   check: '进行检查'
+#  Extra ues in list failure
   failure: '检查失败！'
   id: '请输入举报id'
 consle: '控制台不能使用此指令！'
 reload: '成功重载配置'
+report:
+  theft: '举报偷窃'
+  destroy: '举报破坏'
+  sbug: '举报服务器bug'
+  confirm: '确认'
+  deny: '取消'
+  more: '详情汇报'
+  morelore:
+    - '打开对话框'
+    - '输入你举报的具体内容'

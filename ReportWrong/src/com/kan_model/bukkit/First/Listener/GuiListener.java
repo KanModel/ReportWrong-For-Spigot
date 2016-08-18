@@ -6,9 +6,9 @@ import com.kan_model.bukkit.First.SQL.SaveSql;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -24,9 +24,11 @@ public class GuiListener implements Listener{
     private Inventory mainInv;
     private Player player;
     private ItemStack targetItem;
-    private static final int  THEFT= 1;
+    private static final int  THEFT = 1;
     private static final int DESTROY = 2;
+    private static final int SBUG = 3;
     private int Type = 0;
+    private FileConfiguration lang = ReportWrong.getLang();
 
 //    @EventHandler(priority = EventPriority.HIGHEST)
     @EventHandler
@@ -36,7 +38,7 @@ public class GuiListener implements Listener{
             return;
         }
         if (event.getClick().isRightClick() || event.getClick().isLeftClick()) {
-            if (event.getInventory().getTitle().equalsIgnoreCase(ChatColor.RED + "ReportWrong主界面")) {
+            if (event.getInventory().getTitle().equalsIgnoreCase(ChatColor.RED + lang.getString("gui.main"))) {
                 if (event.getWhoClicked() instanceof Player) {
                     event.setCancelled(true);
                     player = (Player) event.getWhoClicked();
@@ -49,42 +51,29 @@ public class GuiListener implements Listener{
 //                    }
                     if (targetItem.isSimilar(Command.getMainChest()[0])) {
 //                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + "请输入你所要举报的内容或者不填");
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + "你选择了举报偷窃");
-//                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + "确定此处发生偷窃？选择木棍确定，选择指南针返回,选择书本提交详细信息！");
-//                    String world = player.getWorld().getName();
-//                    int x = player.getLocation().getBlockX();
-//                    int y = player.getLocation().getBlockY();
-//                    int z = player.getLocation().getBlockZ();
-////                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + "成功举报世界 " + world + "坐标X:" + x + " Y:" + y + " Z:" + z + "处的举报！");
-//                    if (SaveSql.addReport(player.getName(),world,x,y,z)) {
-//                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + "成功举报世界 " + world + "坐标X:" + x + " Y:" + y + " Z:" + z + "处的举报！");
-//                    }else {
-//                        player.sendMessage(ChatColor.RED + ReportWrong.RW + "举报失败!");
-//                    }
-//                    player.closeInventory();
-//                    mainInv = Bukkit.createInventory(player, 9,ChatColor.RED + "ReportWrong主界面");
-                        confirmInv = Bukkit.createInventory(player, 9, ChatColor.ITALIC + "ReportWrong确认界面");
+                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.theft"));
+                        confirmInv = Bukkit.createInventory(player, 9, ChatColor.ITALIC + lang.getString("gui.confirm"));
                         confirmInv.addItem(Command.getConfirmChest()[0]);
                         confirmInv.addItem(Command.getConfirmChest()[1]);
                         confirmInv.setItem(8, Command.getConfirmChest()[2]);
                         player.openInventory(confirmInv);
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + "确定此处发生偷窃？选择木棍确定，选择指南针返回,选择书本提交详细信息！");
+                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.confirm.theft"));
                         Type = DESTROY;
 //                    player.openInventory(Command.getConfirmChest());
                     } else if (targetItem.isSimilar(Command.getMainChest()[1])) {
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + "你选择了举报偷窃");
-                        confirmInv = Bukkit.createInventory(player, 9, ChatColor.ITALIC + "ReportWrong确认界面");
+                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.destroy"));
+                        confirmInv = Bukkit.createInventory(player, 9, ChatColor.ITALIC + lang.getString("gui.confirm"));
                         confirmInv.addItem(Command.getConfirmChest()[0]);
                         confirmInv.addItem(Command.getConfirmChest()[1]);
                         confirmInv.setItem(8, Command.getConfirmChest()[2]);
                         player.openInventory(confirmInv);
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + "确定此处发生破坏？选择木棍确定，选择指南针返回,选择书本提交详细信息！");
+                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.confirm.destroy"));
                         Type = THEFT;
                     } else if (targetItem.isSimilar(Command.getMainChest()[2])) {
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + "你选择了举报偷窃");
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + "发现服务器有Bug？选择书本提交详细信息，选择指南针返回！");
+                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.sbug"));
+                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.confirm.sbug"));
                         player.closeInventory();
-                        confirmInv = Bukkit.createInventory(player, 9, ChatColor.ITALIC + "ReportWrong确认界面");
+                        confirmInv = Bukkit.createInventory(player, 9, ChatColor.ITALIC + lang.getString("gui.confirm"));
 //                    confirmInv.addItem(Command.getConfirmChest()[0]);
                         confirmInv.addItem(Command.getConfirmChest()[1]);
                         confirmInv.setItem(8, Command.getConfirmChest()[2]);
@@ -102,13 +91,13 @@ public class GuiListener implements Listener{
 //                        break;
 //                }
                 }
-            } else if (event.getInventory().getTitle().equalsIgnoreCase(ChatColor.ITALIC + "ReportWrong确认界面")) {
+            } else if (event.getInventory().getTitle().equalsIgnoreCase(ChatColor.ITALIC + lang.getString("gui.confirm"))) {
                 if (event.getWhoClicked() instanceof Player) {
                     event.setCancelled(true);
                     player = (Player) event.getWhoClicked();
                     targetItem = event.getCurrentItem();
                     if (targetItem.isSimilar(Command.getConfirmChest()[0])) {
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + "确认举报当前位置");
+//                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + "确认举报当前位置");
                         player.closeInventory();
 //                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + "确定此处发生破坏？选择木棍确定，选择指南针返回,选择书本提交详细信息！");
                         String world = player.getWorld().getName();
@@ -116,21 +105,33 @@ public class GuiListener implements Listener{
                         int y = player.getLocation().getBlockY();
                         int z = player.getLocation().getBlockZ();
                         if (SaveSql.addReport(player.getName(), world, x, y, z,Type)) {
-                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + "成功举报世界 " + world + "坐标X:" + x + " Y:" + y + " Z:" + z + "处的举报！");
+                            switch (Type) {
+                                case THEFT:
+                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + lang.getString("gui.c.confirm.theft")
+                                            + world + " [X]:" + x + " [Y]:" + y + " [Z]:" + z);
+                                    break;
+                                case DESTROY:
+                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + lang.getString("gui.c.confirm.destroy")
+                                            + world + " [X]:" + x + " [Y]:" + y + " [Z]:" + z);
+                                    break;
+                                case SBUG:
+                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + lang.getString("gui.c.confirm.sbug"));
+                                    break;
+                            }
                         } else {
-                            player.sendMessage(ChatColor.RED + ReportWrong.RW + "举报失败!");
+                            player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
                         }
                         player.closeInventory();
                     } else if (targetItem.isSimilar(Command.getConfirmChest()[1])) {
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + "取消了此次举报!");
+                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.c.deny"));
 //                    player.closeInventory();
-                        mainInv = Bukkit.createInventory(player, 9, ChatColor.RED + "ReportWrong主界面");
+                        mainInv = Bukkit.createInventory(player, 9, ChatColor.RED + lang.getString("gui.main"));
                         for (ItemStack x : Command.getMainChest()) {
                             mainInv.addItem(x);
                         }
                         player.openInventory(mainInv);
                     } else if (targetItem.isSimilar(Command.getConfirmChest()[2])) {
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + "请输入详细信息");
+                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.c.more"));
                         player.closeInventory();
                     }
                 }

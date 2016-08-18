@@ -44,22 +44,28 @@ public class Command implements CommandExecutor{
     Command(ReportWrong main){
         this.main = main;
         ItemMeta itemMeta = mainChest[0].getItemMeta();
-        itemMeta.setDisplayName(ChatColor.DARK_GREEN + "举报偷窃");
+        itemMeta.setDisplayName(ChatColor.DARK_GREEN + lang.getString("report.theft"));
         mainChest[0].setItemMeta(itemMeta);
         ItemMeta itemMeta2 = mainChest[1].getItemMeta();
-        itemMeta2.setDisplayName(ChatColor.AQUA + "举报破坏");
+        itemMeta2.setDisplayName(ChatColor.AQUA + lang.getString("report.destroy"));
         mainChest[1].setItemMeta(itemMeta2);
-        itemMeta.setDisplayName(ChatColor.GOLD + "举报服务器bug");
+        itemMeta.setDisplayName(ChatColor.GOLD + lang.getString("report.sbug"));
         mainChest[2].setItemMeta(itemMeta);
         this.co = main.getMyConfig();
-        itemMeta.setDisplayName(ChatColor.YELLOW + "确认");
+        itemMeta.setDisplayName(ChatColor.YELLOW + lang.getString("report.confirm"));
         confirmChest[0].setItemMeta(itemMeta);
-        itemMeta.setDisplayName(ChatColor.RED + "取消");
+        itemMeta.setDisplayName(ChatColor.RED + lang.getString("report.deny"));
         confirmChest[1].setItemMeta(itemMeta);
-        itemMeta.setDisplayName(ChatColor.RED + "详情汇报");
+        itemMeta.setDisplayName(ChatColor.RED + lang.getString("report.more"));
         List<String> lores = new ArrayList<String>();
-        lores.add("打开对话框");
-        lores.add("输入你举报的具体内容");
+//        lores.add("打开对话框");
+//        lores.add("输入你举报的具体内容");
+//        for (ItemStack x : mainChest) {
+//            mainInv.addItem(x);
+//        }
+        for(String x : lang.getStringList("report.morelore")){
+            lores.add(x);
+        }
         itemMeta.setLore(lores);
         confirmChest[2].setItemMeta(itemMeta);
         itemMeta.setLore(null);
@@ -88,12 +94,11 @@ public class Command implements CommandExecutor{
                         return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("list")){
                         if (player.hasPermission("reportwrong.list")) {
-//                            Location
-//                            World
                             try {
+                                player.sendMessage(ChatColor.GOLD + "------" + ReportWrong.RW + "List ------" );
                                 SaveSql.listReport(player);
                             }catch (Exception e){
-                                player.sendMessage(ChatColor.RED + ReportWrong.RW + "获取失败!");
+                                player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
                             }
                         }else {
                             player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.list");
@@ -101,7 +106,7 @@ public class Command implements CommandExecutor{
                         }
                         return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("version")){
-                        player.sendMessage(ReportWrong.RW+ "版本信息：" + main.getDescription().getVersion());
+                        player.sendMessage(ChatColor.GOLD + ReportWrong.RW+ "Version:" + main.getDescription().getVersion());
                         return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("reward")) {
 //                        co = main.getMyConfig();
@@ -143,10 +148,11 @@ public class Command implements CommandExecutor{
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("reload")){
                         main.reloadSetting();
                         co = main.getMyConfig();
-                        player.sendMessage(ReportWrong.RW + "成功重载配置");
+                        player.sendMessage(ReportWrong.RW + lang.getString("reload"));
                         return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("check")){
 //                        Integer.parseInt([String])
+
                         if (player.hasPermission("reportwrong.check")) {
                             if (args.length >= 2 && isInt(args[1])) {
                                 try {
@@ -155,7 +161,7 @@ public class Command implements CommandExecutor{
                                     player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.check") + "id:[" + rs.getInt("id") + "]");
                                 } catch (SQLException e) {
                                     player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
-                                    e.printStackTrace();
+//                                    e.printStackTrace();
                                 }
                             } else {
                                 sender.sendMessage(ReportWrong.RW + ChatColor.RED + lang.getString("check.id"));
@@ -210,13 +216,13 @@ public class Command implements CommandExecutor{
 //            player.sendMessage(ReportWrong.RW + ChatColor.RED + "添加参数RewardCount失败");
 //        }
         config.set(name,value);
-        sender.sendMessage(ReportWrong.RW + ChatColor.RED + "缺少参数" + name);
+//        sender.sendMessage(ReportWrong.RW + ChatColor.RED + "缺少参数" + name);
         try {
             config.save(new File(main.getDataFolder(),"config.yml"));
-            sender.sendMessage(ReportWrong.RW + ChatColor.GREEN + "成功添加参数" + name);
+//            sender.sendMessage(ReportWrong.RW + ChatColor.GREEN + "成功添加参数" + name);
         } catch (IOException e) {
             e.printStackTrace();
-            sender.sendMessage(ReportWrong.RW + ChatColor.RED + "添加参数" + name + "失败");
+//            sender.sendMessage(ReportWrong.RW + ChatColor.RED + "未完成添加参数" + name);
         }
     }
 

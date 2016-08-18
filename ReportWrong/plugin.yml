@@ -1,6 +1,6 @@
 name: ReportWrong
 main: com.kan_model.bukkit.First.ReportWrong
-version: 0.0.1
+version: beta0.0.1
 commands:
   reportwrong:
     usage: /repotrwrong 获取更多帮助
