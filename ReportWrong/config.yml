@@ -1,3 +1,5 @@
 #RewardDefault: true
 RewardItem: Diamond
 RewardCount: 1
+#冷却时间单位为秒
+ReportCD: 600

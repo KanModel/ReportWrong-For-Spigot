@@ -276,6 +276,7 @@ public class Command implements CommandExecutor{
 //            sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.switch") + co.getBoolean("RewardDefault"));
             sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.item") + (co.getString("RewardItem")).toString().toUpperCase());
             sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.count") + co.getInt("RewardCount"));
+            sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.cd") + co.getInt("ReportCD"));
 //                            RewardDefault: true
 //                            RewardItem: Diamond
 //                            RewardCount: 1
@@ -289,9 +290,13 @@ public class Command implements CommandExecutor{
             if (!(co.contains("RewardCount"))) {
                 addArgs(sender,co,"RewardCount",1);
             }
+            if (!(co.contains("ReportCD"))) {
+                addArgs(sender,co,"ReportCD",600);
+            }
 //                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.switch") + co.getBoolean("RewardDefault"));
             sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.item") + (co.getString("RewardItem")).toString().toUpperCase());
             sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.count") + co.getInt("RewardCount"));
+            sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.cd") + co.getInt("ReportCD"));
         }
     }
 

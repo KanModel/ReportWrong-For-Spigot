@@ -44,7 +44,7 @@ gui:
     deny: '取消了此次举报!'
     more: '请输入详细信息'
 reward:
-  switch: '是否开启举报回报:'
+  cd: '举报冷却:'
   item: '举报回报物品:'
   count: '回报数量:'
 check:

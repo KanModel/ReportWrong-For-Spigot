@@ -1,4 +1,4 @@
-package com.kan_model.bukkit.First.Listener;
+package com.kan_model.bukkit.First.util;
 
 import org.bukkit.entity.Player;
 

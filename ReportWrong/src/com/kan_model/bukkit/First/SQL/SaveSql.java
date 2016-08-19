@@ -1,6 +1,7 @@
 package com.kan_model.bukkit.First.SQL;
 
 import com.kan_model.bukkit.First.ReportWrong;
+import com.kan_model.bukkit.First.Listener.GuiListener;
 //import com.saveSql.jdbc.Connection;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -114,10 +115,22 @@ public class SaveSql {
             String time;
             while (resultSet.next()){
                 time = resultSet.getString("ctime");
-                resultSet.getInt("Rtype");
-                sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + " " + resultSet.getInt("id") + " " + time + " 玩家[" +
-                        resultSet.getString("name") + "]举报世界[" + resultSet.getString("world") +
-                "] x:" + resultSet.getInt("x") + " y:" + resultSet.getInt("y") + " z:" + resultSet.getInt("z"));
+                int type = resultSet.getInt("Rtype");
+                String Type = null;
+                switch (type){
+                    case GuiListener.THEFT:
+                        Type = "偷窃";
+                        break;
+                    case GuiListener.DESTROY:
+                        Type = "破坏";
+                        break;
+                    case GuiListener.SBUG:
+                        Type = "Bug";
+                        break;
+                }
+                sender.sendMessage(ChatColor.GREEN  + "" + resultSet.getInt("id") + " " + time + " " +
+                        resultSet.getString("name") + " 举报世界[" + resultSet.getString("world") +
+                "] x:" + resultSet.getInt("x") + " y:" + resultSet.getInt("y") + " z:" + resultSet.getInt("z") + "发生" + Type);
             }
         }catch (SQLException e) {
             e.printStackTrace();

@@ -26,7 +26,6 @@ public class ReportWrong extends JavaPlugin {
     private File langFile;
     private FileConfiguration config;
     private static FileConfiguration lang;
-    private SaveSql sql;
 
     @Override
     public void onEnable() {
@@ -45,10 +44,11 @@ public class ReportWrong extends JavaPlugin {
             this.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + RW + ChatColor.RED +lang.getString("LoadFailure"));
         }
         this.getCommand("reportwrong").setExecutor(new Command(this));
-        this.getServer().getPluginManager().registerEvents(new GuiListener(),this);
+        this.getServer().getPluginManager().registerEvents(new GuiListener(this),this);
         this.getServer().getPluginManager().registerEvents(new OpenGUIListener(),this);
-        this.getServer().getPluginManager().registerEvents(new ChatListener(),this);
-        sql = new SaveSql(this,config);
+        this.getServer().getPluginManager().registerEvents(new ChatListener(this),this);
+//        SaveSql sql = new SaveSql(this, config);
+        new SaveSql(this, config);
         this.getServer().getPluginManager().registerEvents(new JoinRewardListener(this),this);
 //        if(!getDataFolder().exists()) {
 //            getDataFolder().mkdir();
@@ -84,7 +84,7 @@ public class ReportWrong extends JavaPlugin {
         }
     }
 
-    public FileConfiguration reloadSetting(){
+    FileConfiguration reloadSetting(){
         return config = YamlConfiguration.loadConfiguration(configFile);
     }
 
