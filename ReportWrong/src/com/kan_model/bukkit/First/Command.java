@@ -95,141 +95,23 @@ public class Command implements CommandExecutor{
                         player.openInventory(mainInv);
                         return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("list")){
-                        if (player.hasPermission("reportwrong.list")) {
-                            try {
-                                player.sendMessage(ChatColor.GOLD + "-----------------------------" + ReportWrong.RW + "List -----------------------------" );
-                                SaveSql.listReport(player);
-                            }catch (Exception e){
-                                player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
-                            }
-                        }else {
-                            player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.list");
-                            return true;
-                        }
+                        List(player);
                         return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("version")){
                         player.sendMessage(ChatColor.GOLD + ReportWrong.RW+ "Version:" + main.getDescription().getVersion());
                         return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("reward")) {
-//                        co = main.getMyConfig();
-                        if (co.contains("RewardDefault") && co.contains("RewardItem") && co.contains("RewardCount")) {
-                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.switch") + co.getBoolean("RewardDefault"));
-                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.item") + (co.getString("RewardItem")).toString().toUpperCase());
-                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.count") + co.getInt("RewardCount"));
-                            return true;
-//                            RewardDefault: true
-//                            RewardItem: Diamond
-//                            RewardCount: 1
-                        } else {
-                            if (!(co.contains("RewardDefault"))) {
-                                addArgs(player,co,"RewardDefault",true);
-                            }
-                            if (!(co.contains("RewardItem"))) {
-                                addArgs(player,co,"RewardItem","Diamond");
-                            }
-                            if (!(co.contains("RewardCount"))) {
-                                addArgs(player,co,"RewardCount",1);
-                            }
-                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.switch") + co.getBoolean("RewardDefault"));
-                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.item") + (co.getString("RewardItem")).toString().toUpperCase());
-                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.count") + co.getInt("RewardCount"));
-                            return true;
-                        }
+                        Reward(player);
+                        return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("reload")){
-                        main.reloadSetting();
-                        co = main.getMyConfig();
-                        player.sendMessage(ReportWrong.RW + lang.getString("reload"));
+                        Reload(player);
                         return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("check")){
-//                        Integer.parseInt([String])
-
-                        if (player.hasPermission("reportwrong.check")) {
-                            if (args.length >= 2 && isInt(args[1])) {
-                                try {
-                                    ResultSet rs = SaveSql.checkReport(Integer.parseInt(args[1]));
-                                    boolean more = false;
-                                    if (!(rs.getString("playerword").equalsIgnoreCase("None"))){
-                                        more = true;
-                                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.check") + "id:[" + rs.getInt("id") + "]");
-                                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + "详情如下:" + ChatColor.WHITE + rs.getString("playerword"));
-                                    }else {
-                                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.check") + "id:[" + rs.getInt("id") + "]不带详情");
-                                    }
-                                    player.teleport(new Location(Bukkit.getWorld(rs.getString("world")), rs.getInt("x"), rs.getInt("y"), rs.getInt("z")));
-                                } catch (SQLException e) {
-                                    player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
-//                                    e.printStackTrace();
-                                }
-                            } else {
-                                sender.sendMessage(ReportWrong.RW + ChatColor.RED + lang.getString("check.id"));
-                                return true;
-                            }
-                            return true;
-                        }else {
-                            player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.check");
-                        }
+                        Check(player,args);
+                        return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("deal")){
-                        if (player.hasPermission("reportwrong.deal")) {
-                            if (args.length >= 2 && isInt(args[1])) {
-                                if (args.length >= 3 && args[2].equalsIgnoreCase("c")) {
-                                    try {
-                                        int id = Integer.parseInt(args[1]);
-                                        ResultSet rs = SaveSql.checkReport(id);
-                                        boolean success = SaveSql.setCompleted(rs, id);
-//                                        player.sendMessage(ChatColor.RED + ReportWrong.RW + "c");
-                                        if (success) {
-                                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.deal") + "[" + id + "]");
-                                        }else {
-                                            player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
-//                                            player.sendMessage(ChatColor.RED + ReportWrong.RW + "ccccc");
-                                        }
-                                    } catch (SQLException e) {
-                                        player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
-                                        e.printStackTrace();
-                                    }
-                                }else {
-//                                    player.sendMessage(ChatColor.RED + ReportWrong.RW + "bushic");
-                                    try {
-                                        int id = Integer.parseInt(args[1]);
-                                        ResultSet rs = SaveSql.checkReport(id);
-//                                        SaveSql.setCompleted(rs, id);
-                                        boolean success = SaveSql.setCompleted(rs, id);
-                                        if (success) {
-                                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.deal") + "[" + id + "]");
-                                            rs = SaveSql.checkReport(id);
-                                            Player rewardPlayer = Bukkit.getPlayer(rs.getString("name"));
-                                            if (rewardPlayer != null) {
-//                                                if (isInt((int)co.get("RewardItem"))) {
-////                                                    rewardPlayer.getInventory().addItem(
-////                                                            new ItemStack(Material.getMaterial(co.getInt("RewardItem")),co.getInt("RewardCount")));
-////                                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.reward"));
-//                                                } else {
-                                                String item = co.getString("RewardItem").toUpperCase();
-//                                                    rewardPlayer.getInventory().addItem(
-//                                                            new ItemStack(Material.getMaterial(item),co.getInt("RewardCount")));
-//                                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.reward"));
-                                                ItemStack rewardItem = new ItemStack(Material.getMaterial(item),co.getInt("RewardCount"));
-                                                rewardPlayer.getWorld().dropItemNaturally(rewardPlayer.getLocation(),rewardItem);
-//                                                }
-                                            } else {
-                                                /*玩家不在线存入数据库*/
-                                                SaveSql.recordReward(rs.getString("name"),co.getString("RewardItem").toUpperCase(),co.getInt("RewardCount"));
-                                                player.sendMessage(ChatColor.RED + ReportWrong.RW + "玩家不在线，当玩家上线是给予回报！");
-//                                                player.sendMessage(ChatColor.RED + ReportWrong.RW + "rewardPlayer != null");
-                                            }
-                                        }else {
-                                            player.sendMessage(ChatColor.RED + ReportWrong.RW + "已经解决");
-                                        }
-                                    } catch (SQLException e) {
-                                        player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                            return true;
-                        }else {
-                            player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.deal");
-                        }
+                        Deal(player,args);
+                        return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("item")){
                         player.getInventory().addItem(OpenGUIListener.getRwItem());
                         return true;
@@ -242,14 +124,18 @@ public class Command implements CommandExecutor{
                 ReportWrong.ShowHelp(sender);
             }
         }else {
-            if (args.length > 0 && args[0].equalsIgnoreCase("reload")){
-                main.reloadSetting();
-                co = main.getMyConfig();
-                sender.sendMessage(ReportWrong.RW + lang.getString("reload"));
+            if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
+                Reload(sender);
+                return true;
+            }else if (args.length > 0 && args[0].equalsIgnoreCase("list")){
+                List(sender);
+                return true;
+            }else if (args.length > 0 && args[0].equalsIgnoreCase("reward")){
+                Reward(sender);
                 return true;
             }else {
                 ReportWrong.ShowHelp(sender);
-                sender.sendMessage(ReportWrong.RW + lang.getString("consle"));
+                sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("consle"));
                 return true;
             }
         }
@@ -295,6 +181,148 @@ public class Command implements CommandExecutor{
             return true;
         }catch (Exception e){
             return false;
+        }
+    }
+
+    public void List(CommandSender sender){
+        if (sender.hasPermission("reportwrong.list")) {
+            try {
+                sender.sendMessage(ChatColor.GOLD + "-----------------------------" + ReportWrong.RW + "List -----------------------------" );
+                SaveSql.listReport(sender);
+            }catch (Exception e){
+                sender.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
+            }
+        }else {
+            sender.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.list");
+        }
+    }
+
+    public void Deal(CommandSender sender,String args[]){
+        if (sender.hasPermission("reportwrong.deal")) {
+            if (args.length >= 2 && isInt(args[1])) {
+                if (args.length >= 3 && args[2].equalsIgnoreCase("c")) {
+                    try {
+                        int id = Integer.parseInt(args[1]);
+                        ResultSet rs = SaveSql.checkReport(id);
+                        boolean success = SaveSql.setCompleted(rs, id);
+//                                        player.sendMessage(ChatColor.RED + ReportWrong.RW + "c");
+                        if (success) {
+                            sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.deal") + "[" + id + "]");
+                        }else {
+                            sender.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
+//                                            player.sendMessage(ChatColor.RED + ReportWrong.RW + "ccccc");
+                        }
+                    } catch (SQLException e) {
+                        sender.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
+                        e.printStackTrace();
+                    }
+                }else {
+//                                    player.sendMessage(ChatColor.RED + ReportWrong.RW + "bushic");
+                    try {
+                        int id = Integer.parseInt(args[1]);
+                        ResultSet rs = SaveSql.checkReport(id);
+//                                        SaveSql.setCompleted(rs, id);
+                        boolean success = SaveSql.setCompleted(rs, id);
+                        if (success) {
+                            sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.deal") + "[" + id + "]");
+                            rs = SaveSql.checkReport(id);
+                            Player rewardPlayer = Bukkit.getPlayer(rs.getString("name"));
+                            if (rewardPlayer != null) {
+//                                                if (isInt((int)co.get("RewardItem"))) {
+////                                                    rewardPlayer.getInventory().addItem(
+////                                                            new ItemStack(Material.getMaterial(co.getInt("RewardItem")),co.getInt("RewardCount")));
+////                                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.reward"));
+//                                                } else {
+                                String item = co.getString("RewardItem").toUpperCase();
+//                                                    rewardPlayer.getInventory().addItem(
+//                                                            new ItemStack(Material.getMaterial(item),co.getInt("RewardCount")));
+//                                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.reward"));
+                                try {
+                                    ItemStack rewardItem = new ItemStack(Material.getMaterial(item),co.getInt("RewardCount"));
+                                    rewardPlayer.getWorld().dropItemNaturally(rewardPlayer.getLocation(),rewardItem);
+                                }catch (Exception e){
+                                    sender.sendMessage(ChatColor.RED + ReportWrong.RW + "错误物品名称:" + item);
+                                }
+//                                                }
+                            } else {
+                                                /*玩家不在线存入数据库*/
+                                SaveSql.recordReward(rs.getString("name"),co.getString("RewardItem").toUpperCase(),co.getInt("RewardCount"));
+                                sender.sendMessage(ChatColor.RED + ReportWrong.RW + "玩家不在线，当玩家上线是给予回报！");
+//                                                player.sendMessage(ChatColor.RED + ReportWrong.RW + "rewardPlayer != null");
+                            }
+                        }else {
+                            sender.sendMessage(ChatColor.RED + ReportWrong.RW + "已经解决");
+                        }
+                    } catch (SQLException e) {
+                        sender.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }else {
+            sender.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.deal");
+        }
+    }
+
+    public void Reload(CommandSender sender){
+        main.reloadSetting();
+        co = main.getMyConfig();
+        sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("reload"));
+    }
+
+    public void Reward(CommandSender sender){
+        //                        co = main.getMyConfig();
+        if (co.contains("RewardDefault") && co.contains("RewardItem") && co.contains("RewardCount")) {
+//            sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.switch") + co.getBoolean("RewardDefault"));
+            sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.item") + (co.getString("RewardItem")).toString().toUpperCase());
+            sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.count") + co.getInt("RewardCount"));
+//                            RewardDefault: true
+//                            RewardItem: Diamond
+//                            RewardCount: 1
+        } else {
+//                            if (!(co.contains("RewardDefault"))) {
+//                                addArgs(player,co,"RewardDefault",true);
+//                            }
+            if (!(co.contains("RewardItem"))) {
+                addArgs(sender,co,"RewardItem","Diamond");
+            }
+            if (!(co.contains("RewardCount"))) {
+                addArgs(sender,co,"RewardCount",1);
+            }
+//                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.switch") + co.getBoolean("RewardDefault"));
+            sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.item") + (co.getString("RewardItem")).toString().toUpperCase());
+            sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.count") + co.getInt("RewardCount"));
+        }
+    }
+
+    public void Check(CommandSender sender,String args[]){
+        //                        Integer.parseInt([String])
+        if (player.hasPermission("reportwrong.check")) {
+            if (args.length >= 2 && isInt(args[1])) {
+                try {
+                    ResultSet rs = SaveSql.checkReport(Integer.parseInt(args[1]));
+                    boolean more = false;
+                    if (!(rs.getString("playerword").equalsIgnoreCase("None"))){
+                        more = true;
+                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.check") + "id:[" + rs.getInt("id") + "]");
+                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + "详情如下:" + ChatColor.WHITE + rs.getString("playerword"));
+                    }else {
+                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.check") + "id:[" + rs.getInt("id") + "]不带详情");
+                    }
+                    player.teleport(new Location(Bukkit.getWorld(rs.getString("world")), rs.getInt("x"), rs.getInt("y"), rs.getInt("z")));
+                } catch (SQLException e) {
+                    player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
+//                    return true;
+//                                    e.printStackTrace();
+                }
+            } else {
+                sender.sendMessage(ReportWrong.RW + ChatColor.RED + lang.getString("check.id"));
+//                return true;
+            }
+//            return true;
+        }else {
+            player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.check");
+//            return true;
         }
     }
 }
