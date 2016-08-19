@@ -192,6 +192,7 @@ public class GuiListener implements Listener{
 //                                    }
 //                                    break;
 //                            }
+                                untiType = new Type(untiType.getType(),player,true);
                             } else {
                                 player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
                             }

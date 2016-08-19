@@ -33,7 +33,7 @@ public class ChatListener implements Listener{
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event){
         untiType = GuiListener.getUntiType();
-        if (untiType.getPlayer().getName().equalsIgnoreCase(event.getPlayer().getName())) {
+        if (untiType.getPlayer().getName().equalsIgnoreCase(event.getPlayer().getName()) && untiType.getMore()) {
             Player player = event.getPlayer();
             if (this.cooldown.containsKey(player)) {
                 if (System.currentTimeMillis() - ((Long) this.cooldown.get(player)).longValue() > 1000L * config.getInt("ReportCD")) {
@@ -51,6 +51,7 @@ public class ChatListener implements Listener{
                 }
                 player.closeInventory();
             }
+            untiType.setMore();
         }
     }
 
