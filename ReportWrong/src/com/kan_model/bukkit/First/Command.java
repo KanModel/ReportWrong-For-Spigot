@@ -1,5 +1,6 @@
 package com.kan_model.bukkit.First;
 
+import com.kan_model.bukkit.First.Listener.OpenGUIListener;
 import com.kan_model.bukkit.First.SQL.SaveSql;
 import org.bukkit.*;
 import org.bukkit.command.CommandExecutor;
@@ -112,17 +113,15 @@ public class Command implements CommandExecutor{
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("reward")) {
 //                        co = main.getMyConfig();
                         if (co.contains("RewardDefault") && co.contains("RewardItem") && co.contains("RewardCount")) {
-                            player.sendMessage(ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.switch") + co.getBoolean("RewardDefault"));
-                            player.sendMessage(ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.item") + co.getString("RewardItem"));
-                            player.sendMessage(ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.count") + co.getInt("RewardCount"));
+                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.switch") + co.getBoolean("RewardDefault"));
+                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.item") + co.getString("RewardItem"));
+                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.count") + co.getInt("RewardCount"));
                             return true;
 //                            RewardDefault: true
 //                            RewardItem: Diamond
 //                            RewardCount: 1
                         } else {
                             if (!(co.contains("RewardDefault"))) {
-//                                player.sendMessage(ReportWrong.RW + "缺少参数RewardDefault");
-//                                co.set("RewardDefault", "true");
                                 addArgs(player,co,"RewardDefault",true);
                             }
                             if (!(co.contains("RewardItem"))) {
@@ -131,19 +130,9 @@ public class Command implements CommandExecutor{
                             if (!(co.contains("RewardCount"))) {
                                 addArgs(player,co,"RewardCount",1);
                             }
-//                            File file = new File(getDataFolder(),"config.yml");
-//                            try{getMyConfig().save(file);}
-//                            catch
-//                                    (IOException e){e.printStackTrace();}
-//                            File file = new File(main.getDataFolder(), "config.yml");
-//                            try {
-//                                main.getMyConfig().save(file);
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-                            player.sendMessage(ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.switch") + co.getBoolean("RewardDefault"));
-                            player.sendMessage(ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.item") + co.getString("RewardItem"));
-                            player.sendMessage(ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.count") + co.getInt("RewardCount"));
+                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.switch") + co.getBoolean("RewardDefault"));
+                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.item") + (co.getString("RewardItem")).toString().toUpperCase());
+                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.count") + co.getInt("RewardCount"));
                             return true;
                         }
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("reload")){
@@ -185,7 +174,7 @@ public class Command implements CommandExecutor{
                                             player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.deal") + "[" + id + "]");
                                         }else {
                                             player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
-                                            player.sendMessage(ChatColor.RED + ReportWrong.RW + "ccccc");
+//                                            player.sendMessage(ChatColor.RED + ReportWrong.RW + "ccccc");
                                         }
                                     } catch (SQLException e) {
                                         player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
@@ -203,19 +192,23 @@ public class Command implements CommandExecutor{
                                             rs = SaveSql.checkReport(id);
                                             Player rewardPlayer = Bukkit.getPlayer(rs.getString("name"));
                                             if (rewardPlayer != null) {
-                                                if (isInt((int)co.get("RewardItem"))) {
-                                                    rewardPlayer.getInventory().addItem(
-                                                            new ItemStack(Material.getMaterial(co.getInt("RewardItem")),co.getInt("RewardCount")));
-                                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.reward"));
-                                                } else {
-                                                    String item = co.getString("RewardItem").toUpperCase();
-                                                    rewardPlayer.getInventory().addItem(
-                                                            new ItemStack(Material.getMaterial(item),co.getInt("RewardCount")));
-                                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.reward"));
-                                                }
+//                                                if (isInt((int)co.get("RewardItem"))) {
+////                                                    rewardPlayer.getInventory().addItem(
+////                                                            new ItemStack(Material.getMaterial(co.getInt("RewardItem")),co.getInt("RewardCount")));
+////                                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.reward"));
+//                                                } else {
+                                                String item = co.getString("RewardItem").toUpperCase();
+//                                                    rewardPlayer.getInventory().addItem(
+//                                                            new ItemStack(Material.getMaterial(item),co.getInt("RewardCount")));
+//                                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.reward"));
+                                                ItemStack rewardItem = new ItemStack(Material.getMaterial(item),co.getInt("RewardCount"));
+                                                rewardPlayer.getWorld().dropItemNaturally(rewardPlayer.getLocation(),rewardItem);
+//                                                }
                                             } else {
-                                                player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
-                                                player.sendMessage(ChatColor.RED + ReportWrong.RW + "rewardPlayer != null");
+                                                /*玩家不在线存入数据库*/
+                                                SaveSql.recordReward(rs.getString("name"),co.getString("RewardItem").toUpperCase(),co.getInt("RewardCount"));
+                                                player.sendMessage(ChatColor.RED + ReportWrong.RW + "玩家不在线，当玩家上线是给予回报！");
+//                                                player.sendMessage(ChatColor.RED + ReportWrong.RW + "rewardPlayer != null");
                                             }
                                         }else {
                                             player.sendMessage(ChatColor.RED + ReportWrong.RW + "已经解决");
@@ -230,7 +223,10 @@ public class Command implements CommandExecutor{
                         }else {
                             player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.deal");
                         }
-                    }else {
+                    }else if (args.length > 0 && args[0].equalsIgnoreCase("item")){
+                        player.getInventory().addItem(OpenGUIListener.getRwItem());
+                        return true;
+                    } else {
                         ReportWrong.ShowHelp(sender);
                         return true;
                     }

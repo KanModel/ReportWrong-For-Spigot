@@ -7,6 +7,7 @@ help:
   - '/reportwrong 等于/rw 或者 /rp'
   - '/reportwrong ? 获取帮助'
   - '/reportwrong gui 打开箱子操作面板'
+  - '/reportwrong item 获得打开箱子操作面板的道具'
   - '/reportwrong list 查询已有举报'
   - '/reportwrong check [举报id] 检查举报'
   - '/reportwrong deal [举报id] [空 给予回报/c 关闭]解决举报'
