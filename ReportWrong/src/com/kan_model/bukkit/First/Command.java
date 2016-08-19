@@ -114,7 +114,7 @@ public class Command implements CommandExecutor{
 //                        co = main.getMyConfig();
                         if (co.contains("RewardDefault") && co.contains("RewardItem") && co.contains("RewardCount")) {
                             player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.switch") + co.getBoolean("RewardDefault"));
-                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.item") + co.getString("RewardItem"));
+                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.item") + (co.getString("RewardItem")).toString().toUpperCase());
                             player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.WHITE + lang.getString("reward.count") + co.getInt("RewardCount"));
                             return true;
 //                            RewardDefault: true
@@ -147,8 +147,15 @@ public class Command implements CommandExecutor{
                             if (args.length >= 2 && isInt(args[1])) {
                                 try {
                                     ResultSet rs = SaveSql.checkReport(Integer.parseInt(args[1]));
+                                    boolean more = false;
+                                    if (!(rs.getString("playerword").equalsIgnoreCase("None"))){
+                                        more = true;
+                                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.check") + "id:[" + rs.getInt("id") + "]");
+                                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + "详情如下:" + ChatColor.WHITE + rs.getString("playerword"));
+                                    }else {
+                                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.check") + "id:[" + rs.getInt("id") + "]不带详情");
+                                    }
                                     player.teleport(new Location(Bukkit.getWorld(rs.getString("world")), rs.getInt("x"), rs.getInt("y"), rs.getInt("z")));
-                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.check") + "id:[" + rs.getInt("id") + "]");
                                 } catch (SQLException e) {
                                     player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
 //                                    e.printStackTrace();

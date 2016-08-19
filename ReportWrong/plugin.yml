@@ -1,6 +1,6 @@
 name: ReportWrong
 main: com.kan_model.bukkit.First.ReportWrong
-version: ' beta0.0.2'
+version: ' beta0.0.3'
 author: kan_model
 commands:
   reportwrong:

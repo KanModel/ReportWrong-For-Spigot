@@ -32,7 +32,7 @@ public class GuiListener implements Listener{
     public static final int SBUG = 3;
     private int Type = 0;
     private FileConfiguration lang = ReportWrong.getLang();
-    private Type untiType;
+    private static Type untiType;
 
 //    @EventHandler(priority = EventPriority.HIGHEST)
     @EventHandler
@@ -101,26 +101,36 @@ public class GuiListener implements Listener{
                         int z = player.getLocation().getBlockZ();
                         if (untiType.getPlayer().getName().equalsIgnoreCase(player.getName())) {
                             String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                            if (SaveSql.addReport(player.getName(), world, x, y, z, untiType.getType(), time)) {
-                                switch (untiType.getType()) {
-                                    case THEFT:
-                                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time
-                                                + lang.getString("gui.c.confirm.theft")
-                                                + world + " [X]:" + x + " [Y]:" + y + " [Z]:" + z);
-                                        break;
-                                    case DESTROY:
-                                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time
-                                                + lang.getString("gui.c.confirm.destroy")
-                                                + world + " [X]:" + x + " [Y]:" + y + " [Z]:" + z);
-                                        break;
-                                    case SBUG:
-                                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time
-                                                + lang.getString("gui.c.confirm.sbug"));
-                                        break;
-                                }
-                            } else {
-                                player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
+//                            if (SaveSql.addReport(player.getName(), world, x, y, z, untiType.getType(), time)) {
+                            switch (untiType.getType()) {
+                                case THEFT:
+                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time
+                                            + lang.getString("gui.c.confirm.theft")
+                                            + world + " [X]:" + x + " [Y]:" + y + " [Z]:" + z);
+                                    if (!(SaveSql.addReport(player.getName(), world, x, y, z, untiType.getType(), time))){
+                                        player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
+                                    }else {
+                                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + "举报完成！");
+                                    }
+                                    break;
+                                case DESTROY:
+                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time
+                                            + lang.getString("gui.c.confirm.destroy")
+                                            + world + " [X]:" + x + " [Y]:" + y + " [Z]:" + z);
+                                    if (!(SaveSql.addReport(player.getName(), world, x, y, z, untiType.getType(), time))){
+                                        player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
+                                    }else {
+                                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + "举报完成！");
+                                    }
+                                    break;
+                                case SBUG:
+                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time
+                                            + lang.getString("gui.c.confirm.sbug"));
+                                    break;
                             }
+//                            } else {
+//                                player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
+//                            }
                         }else {
                             player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
                         }
@@ -136,10 +146,56 @@ public class GuiListener implements Listener{
                     } else if (targetItem.isSimilar(Command.getConfirmChest()[2])) {
                         player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.c.more"));
                         player.closeInventory();
+//                        String world = player.getWorld().getName();
+//                        int x = player.getLocation().getBlockX();
+//                        int y = player.getLocation().getBlockY();
+//                        int z = player.getLocation().getBlockZ();
+                        if (untiType.getPlayer().getName().equalsIgnoreCase(player.getName())) {
+//                            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+//                            switch (untiType.getType()) {
+//                                case THEFT:
+//                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time
+//                                            + lang.getString("gui.c.confirm.theft")
+//                                            + world + " [X]:" + x + " [Y]:" + y + " [Z]:" + z);
+//                                    if (!(SaveSql.addReport(player.getName(), world, x, y, z, untiType.getType(), time,untiType.getMoreInformation()))){
+//                                        player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
+//                                    }else {
+//                                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + "举报详情如下:" + ChatColor.WHITE + untiType.getMoreInformation());
+//                                    }
+//                                    break;
+//                                case DESTROY:
+//                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time
+//                                            + lang.getString("gui.c.confirm.destroy")
+//                                            + world + " [X]:" + x + " [Y]:" + y + " [Z]:" + z);
+//                                    if (!(SaveSql.addReport(player.getName(), world, x, y, z, untiType.getType(), time,untiType.getMoreInformation()))){
+//                                        player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
+//                                    }else {
+//                                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + "举报详情如下:" + ChatColor.WHITE + untiType.getMoreInformation());
+//                                    }
+//                                    break;
+//                                case SBUG:
+//                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time
+//                                            + lang.getString("gui.c.confirm.sbug"));
+//                                    if (!(SaveSql.addReport(player.getName(), world, x, y, z, untiType.getType(), time,untiType.getMoreInformation()))){
+//                                        player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
+//                                    }else {
+//                                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + "举报详情如下:" + ChatColor.WHITE + untiType.getMoreInformation());
+//                                    }
+//                                    break;
+//                            }
+                        }else {
+                            player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
+                        }
+                        player.closeInventory();
                     }
                 }
             }
         }
     }
+
+    public static com.kan_model.bukkit.First.Listener.Type getUntiType() {
+        return untiType;
+    }
+
 }
 

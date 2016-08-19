@@ -62,11 +62,26 @@ public class SaveSql {
 
     public static boolean addReport(String playerName, String world, int x, int y, int z,int type ,String cotime){
         boolean s = false;
+//        try {
+//            ResultSet resultSet = statement.executeQuery("SELECT COUNT(id) FROM 'rwlist'");
+//            int id = resultSet.getInt(1) + 1;
+//            statement.executeUpdate("INSERT INTO rwlist (id, name, world, x, y, z,Rtype,ctime) VALUES (" + id + ",'"
+//                    + playerName + "','" + world + "'," + x + "," + y + "," + z + "," + type + ",'" + cotime + "');");
+//            s = true;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+        s = addReport(playerName,world,x,y,z,type,cotime,"None");
+        return s;
+    }
+
+    public static boolean addReport(String playerName, String world, int x, int y, int z,int type ,String cotime ,String more){
+        boolean s =false;
         try {
             ResultSet resultSet = statement.executeQuery("SELECT COUNT(id) FROM 'rwlist'");
             int id = resultSet.getInt(1) + 1;
-            statement.executeUpdate("INSERT INTO rwlist (id, name, world, x, y, z,Rtype,ctime) VALUES (" + id + ",'"
-                    + playerName + "','" + world + "'," + x + "," + y + "," + z + "," + type + ",'" + cotime + "');");
+            statement.executeUpdate("INSERT INTO rwlist (id, name, world, x, y, z,Rtype,ctime,playerword) VALUES (" + id + ",'"
+                    + playerName + "','" + world + "'," + x + "," + y + "," + z + "," + type + ",'" + cotime + "','" + more + "');");
             s = true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -122,6 +137,16 @@ public class SaveSql {
             }else {
                 return false;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean setRewardCompleted(ResultSet resultSet,int id){
+        try {
+            statement.executeUpdate("UPDATE rewardList SET complete = 1 WHERE id = " + id);
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }

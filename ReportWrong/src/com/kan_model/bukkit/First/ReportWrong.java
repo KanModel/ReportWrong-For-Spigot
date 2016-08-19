@@ -1,5 +1,6 @@
 package com.kan_model.bukkit.First;
 
+import com.kan_model.bukkit.First.Listener.ChatListener;
 import com.kan_model.bukkit.First.Listener.GuiListener;
 import com.kan_model.bukkit.First.Listener.JoinRewardListener;
 import com.kan_model.bukkit.First.Listener.OpenGUIListener;
@@ -46,6 +47,7 @@ public class ReportWrong extends JavaPlugin {
         this.getCommand("reportwrong").setExecutor(new Command(this));
         this.getServer().getPluginManager().registerEvents(new GuiListener(),this);
         this.getServer().getPluginManager().registerEvents(new OpenGUIListener(),this);
+        this.getServer().getPluginManager().registerEvents(new ChatListener(),this);
         sql = new SaveSql(this,config);
         this.getServer().getPluginManager().registerEvents(new JoinRewardListener(this),this);
 //        if(!getDataFolder().exists()) {

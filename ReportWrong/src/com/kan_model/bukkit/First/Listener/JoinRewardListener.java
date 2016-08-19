@@ -43,19 +43,26 @@ public class JoinRewardListener implements Listener{
             ResultSet resultSet = statement.executeQuery("SELECT * FROM rewardList WHERE complete = 0;");
 
             while (resultSet.next()){
-                String name = resultSet.getString("name");
-                String item = co.getString("RewardItem").toUpperCase();
+                if (resultSet.getInt("complete") == 1) {
+                    String name = resultSet.getString("name");
+                    String item = co.getString("RewardItem").toUpperCase();
 //                rewardPlayer.getInventory().addItem(
 //                        new ItemStack(Material.getMaterial(item),co.getInt("RewardCount")));
-                if (playerName.equalsIgnoreCase(name)){
+                    if (playerName.equalsIgnoreCase(name)) {
 //                    Inventory inventory = player.getInventory();
 //                    inventory.addItem();
-                    if (resultSet.getInt("rc") != 0) {
-                        ItemStack rewardItem = new ItemStack(Material.getMaterial(item), co.getInt("RewardCount"));
-                        player.getWorld().dropItemNaturally(player.getLocation(), rewardItem);
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + "你被给予了回报！");
-                    }else {
-                        player.sendMessage(ChatColor.RED + ReportWrong.RW + "你的举报被解决不带回报");
+                        if (resultSet.getInt("rc") != 0) {
+                            ItemStack rewardItem = new ItemStack(Material.getMaterial(item), co.getInt("RewardCount"));
+                            player.getWorld().dropItemNaturally(player.getLocation(), rewardItem);
+                            player.sendMessage(ChatColor.GREEN + ReportWrong.RW + "你被给予了回报！");
+                            resultSet = statement.executeQuery("SELECT * FROM rewardList WHERE complete = 0;");
+                            SaveSql.setRewardCompleted(resultSet, resultSet.getInt("complete"));
+                        } else {
+                            player.sendMessage(ChatColor.RED + ReportWrong.RW + "你的举报被解决不带回报");
+
+                            resultSet = statement.executeQuery("SELECT * FROM rewardList WHERE complete = 0;");
+                            SaveSql.setRewardCompleted(resultSet, resultSet.getInt("complete"));
+                        }
                     }
                 }
             }

@@ -37,9 +37,9 @@ gui:
       sbug: '发现服务器有Bug？选择书本提交详细信息，选择指南针返回！'
   c:
     confirm:
-      theft: '举报[THEFT]当前位置成功! [世界] '
-      destroy: '举报[DESTROY]当前位置成功! [世界] '
-      sbug: '举报[BUG]成功'
+      theft: '举报[THEFT]当前位置! [世界] '
+      destroy: '举报[DESTROY]当前位置! [世界] '
+      sbug: '举报[BUG]'
       failure: '举报失败!'
     deny: '取消了此次举报!'
     more: '请输入详细信息'
