@@ -1,9 +1,6 @@
 package com.kan_model.bukkit.First;
 
-import com.kan_model.bukkit.First.Listener.ChatListener;
-import com.kan_model.bukkit.First.Listener.GuiListener;
-import com.kan_model.bukkit.First.Listener.JoinRewardListener;
-import com.kan_model.bukkit.First.Listener.OpenGUIListener;
+import com.kan_model.bukkit.First.Listener.*;
 import com.kan_model.bukkit.First.SQL.SaveSql;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -50,6 +47,7 @@ public class ReportWrong extends JavaPlugin {
 //        SaveSql sql = new SaveSql(this, config);
         new SaveSql(this, config);
         this.getServer().getPluginManager().registerEvents(new JoinRewardListener(this),this);
+        this.getServer().getPluginManager().registerEvents(new AdminJoinRemind(),this);
 //        if(!getDataFolder().exists()) {
 //            getDataFolder().mkdir();
 //        }

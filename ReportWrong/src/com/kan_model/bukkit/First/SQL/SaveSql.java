@@ -39,6 +39,8 @@ public class SaveSql {
                     "'ctime' VARCHAR NOT NULL ,'UUID' VARCHAR DEFAULT 'None')");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS rewardList('id' INT NOT NULL,'name' VARCHAR (32) NOT NULL ," +
                     "'ri' VARCHAR NOT NULL ,'rc' INT NOT NULL ,'complete' INT DEFAULT 0,'UUID' VARCHAR DEFAULT 'None')");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS rwcount('rwcount' INT DEFAULT 0,'complete' INT DEFAULT 0)");
+//            isRWCountNull();
             Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + rw.RW + "数据库启动成功！");
         } catch (SQLException e1) {
             e1.printStackTrace();
@@ -84,6 +86,14 @@ public class SaveSql {
             statement.executeUpdate("INSERT INTO rwlist (id, name, world, x, y, z,Rtype,ctime,playerword) VALUES (" + id + ",'"
                     + playerName + "','" + world + "'," + x + "," + y + "," + z + "," + type + ",'" + cotime + "','" + more + "');");
             s = true;
+            ResultSet rwcount = statement.executeQuery("SELECT * FROM 'rwcount'");
+//            ResultSet rwcount = statement.executeQuery("SELECT * FROM 'rwcount'");
+//            int ricount = rwcount.getInt(1);
+//            if (ricount == 0){
+//                Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + ReportWrong.RW + "数据库新建成功！");
+//                statement.executeUpdate("INSERT INTO rewardList (complete) VALUES (1)");
+//            }
+            statement.executeUpdate("INSERT INTO rwcount (rwcount) VALUES (" + id + ")");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -142,16 +152,32 @@ public class SaveSql {
         return resultSet;
     }
 
-    public static boolean setCompleted(ResultSet resultSet,int id){
+    public static boolean haveId(int id){
         try {
-            if (resultSet.getInt("complete") == 0) {
-                statement.executeUpdate("UPDATE rwlist SET complete = 1 WHERE id = " + id);
-                return true;
-            }else {
+            if (checkReport(id).getInt(1) == 0){
                 return false;
+            }else {
+                return true;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        }catch (SQLException e){
+
+        }
+        return false;
+    }
+
+    public static boolean setCompleted(ResultSet resultSet,int id) throws SQLException {
+        if (haveId(id)) {
+            try {
+                if (resultSet.getInt("complete") == 0) {
+                    statement.executeUpdate("UPDATE rwlist SET complete = 1 WHERE id = " + id);
+                    statement.executeUpdate("UPDATE rwcount SET complete = 1 WHERE rwcount = " + id);
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }
@@ -177,4 +203,41 @@ public class SaveSql {
     public static Connection getConnection() {
         return connection;
     }
+
+    public static int getUndoneCount() throws SQLException {
+        int count = 0;
+//        select fk, count(value)
+//                from table
+//        group by fk
+//        having count(value) > 1;
+//        try {
+//            ResultSet resultSet;
+////            SELECT COUNT(Customer) AS CustomerNilsen FROM Orders
+////            WHERE Customer='Carter'
+////            resultSet = statement.executeQuery("SELECT COUNT(complete) FROM 'rewardList' GROUP BY rewardList HAVING complete = 0");
+////            SELECT COUNT (Store_Name)
+////                    FROM Store_Information
+////            WHERE Store_Name IS NOT NULL;
+////            select 类别, count(*) AS 记录数 from A group by 类别;
+////            resultSet = statement.executeQuery("SELECT complete,COUNT(*),ctime FROM 'rewardList'GROUP BY ctime HAVING complete = 0");
+//            resultSet = statement.executeQuery("SELECT COUNT(id) FROM (SELECT id FROM 'rewardList' WHERE complete = 0)");
+//            count = resultSet.getInt(1);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            count = 0;
+//        }
+        ResultSet rwcount = statement.executeQuery("SELECT COUNT(*) FROM 'rwcount'WHERE complete = 0");
+        count = rwcount.getInt(1);
+        return count;
+    }
+
+//    public static boolean isRWCountNull() throws SQLException {
+//        ResultSet rwcount = statement.executeQuery("SELECT * FROM 'rwcount'");
+//        int ricount = rwcount.getInt(1);
+//        if (ricount == 0){
+//            statement.executeUpdate("INSERT INTO rwcount (complete) VALUES (1)");
+//            return false;
+//        }
+//        return true;
+//    }
 }

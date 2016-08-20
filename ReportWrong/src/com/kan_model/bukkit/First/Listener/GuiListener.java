@@ -210,14 +210,13 @@ public class GuiListener implements Listener{
         return untiType;
     }
 
-    public void addReport(Player player) {
+    public void addReport(Player player) throws Exception{
         player.closeInventory();
         String world = player.getWorld().getName();
         int x = player.getLocation().getBlockX();
         int y = player.getLocation().getBlockY();
         int z = player.getLocation().getBlockZ();
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-//                            if (SaveSql.addReport(player.getName(), world, x, y, z, untiType.getType(), time)) {
         switch (untiType.getType()) {
             case THEFT:
                 player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time

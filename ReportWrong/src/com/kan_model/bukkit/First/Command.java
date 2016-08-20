@@ -187,9 +187,10 @@ public class Command implements CommandExecutor{
     public void List(CommandSender sender){
         if (sender.hasPermission("reportwrong.list")) {
             try {
-                sender.sendMessage(ChatColor.GOLD + "-----------------------------" + ReportWrong.RW + "List -----------------------------" );
+                sender.sendMessage(ChatColor.GOLD + "---------------------------" + ReportWrong.RW + "List " + SaveSql.getUndoneCount() + "---------------------------" );
                 SaveSql.listReport(sender);
             }catch (Exception e){
+                e.printStackTrace();
                 sender.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
             }
         }else {
@@ -251,7 +252,7 @@ public class Command implements CommandExecutor{
 //                                                player.sendMessage(ChatColor.RED + ReportWrong.RW + "rewardPlayer != null");
                             }
                         }else {
-                            sender.sendMessage(ChatColor.RED + ReportWrong.RW + "已经解决");
+                            sender.sendMessage(ChatColor.RED + ReportWrong.RW + "已经解决或不存在ID");
                         }
                     } catch (SQLException e) {
                         sender.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));

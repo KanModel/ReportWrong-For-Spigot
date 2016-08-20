@@ -21,7 +21,7 @@ public class ChatListener implements Listener{
     public static final int  THEFT = 1;
     public static final int DESTROY = 2;
     public static final int SBUG = 3;
-    private Type untiType = null;
+    private Type untiType = new Type();
     private FileConfiguration lang = ReportWrong.getLang();
     private FileConfiguration config;
     private static HashMap<Player, Long> cooldown = GuiListener.getCooldown();
@@ -32,26 +32,32 @@ public class ChatListener implements Listener{
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event){
-        untiType = GuiListener.getUntiType();
-        if (untiType.getPlayer().getName().equalsIgnoreCase(event.getPlayer().getName()) && untiType.getMore()) {
-            Player player = event.getPlayer();
-            if (this.cooldown.containsKey(player)) {
-                if (System.currentTimeMillis() - ((Long) this.cooldown.get(player)).longValue() > 1000L * config.getInt("ReportCD")) {
-                    addReport(player,event);
-                }else if(!player.isOp()) {
-                    player.sendMessage(ChatColor.RED + ReportWrong.RW + "你刚刚举报过，等等再举报吧!");
-                    event.setCancelled(true);
+        try {
+            untiType = GuiListener.getUntiType();
+            if (untiType.getPlayer().getName().equalsIgnoreCase(event.getPlayer().getName()) && untiType.getMore()) {
+                Player player = event.getPlayer();
+                if (this.cooldown.containsKey(player)) {
+                    if (System.currentTimeMillis() - ((Long) this.cooldown.get(player)).longValue() > 1000L * config.getInt("ReportCD")) {
+                        addReport(player, event);
+                    } else if (!player.isOp()) {
+                        player.sendMessage(ChatColor.RED + ReportWrong.RW + "你刚刚举报过，等等再举报吧!");
+                        event.setCancelled(true);
+                    }
+                } else if (!player.isOp()){
+                    this.cooldown.put(player, Long.valueOf(System.currentTimeMillis()));
+                    if (untiType.getPlayer().getName().equalsIgnoreCase(player.getName())) {
+                        addReport(player, event);
+                    } else {
+                        player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
+                    }
+                    player.closeInventory();
                 }
-            }else {
-                this.cooldown.put(player, Long.valueOf(System.currentTimeMillis()));
-                if (untiType.getPlayer().getName().equalsIgnoreCase(player.getName())) {
-                    addReport(player,event);
-                } else {
-                    player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
-                }
-                player.closeInventory();
+                untiType.setMore();
             }
-            untiType.setMore();
+        }catch (NullPointerException e){
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
