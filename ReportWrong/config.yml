@@ -1,4 +1,6 @@
+#奖励物品使用道具英文
 RewardItem: Diamond
+#奖励物品个数
 RewardCount: 1
-#冷却时间单位为秒
+#冷却时间，单位为秒
 ReportCD: 600

@@ -272,9 +272,13 @@ public class Command implements CommandExecutor{
     }
 
     public void Reload(CommandSender sender){
-        main.reloadSetting();
-        co = main.getMyConfig();
-        sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("reload"));
+        if (sender.hasPermission("reportwrong.reload")) {
+            main.reloadSetting();
+            co = main.getMyConfig();
+            sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("reload"));
+        }else {
+            sender.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.reload");
+        }
     }
 
     public void Reward(CommandSender sender){

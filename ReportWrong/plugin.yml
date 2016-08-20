@@ -17,3 +17,15 @@ permissions:
     default: op
   reportwrong.deal:
     default: op
+  reportwrong.reload:
+    default: op
+# reportwrong.*:
+# 给普通玩家的权限，
+# reportwrong.list:
+#  使用/rw list的权限
+# reportwrong.check:
+#  使用/rw list的权限
+# reportwrong.deal:
+#  使用/rw list的权限
+# reportwrong.reload:
+#  使用/rw reload的权限
