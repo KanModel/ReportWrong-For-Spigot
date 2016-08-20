@@ -105,6 +105,8 @@ public class GuiListener implements Listener{
                                 }else if(!player.isOp()) {
                                     player.sendMessage(ChatColor.RED + ReportWrong.RW + "你刚刚举报过，等等再举报吧!");
                                     event.setCancelled(true);
+                                }else {
+                                    player.sendMessage(ChatColor.RED + ReportWrong.RW + "管理员不能举报!");
                                 }
                             } else if(!player.isOp()) {
                                 this.cooldown.put(player, Long.valueOf(System.currentTimeMillis()));
@@ -114,6 +116,8 @@ public class GuiListener implements Listener{
                                     player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
                                 }
                                 player.closeInventory();
+                            }else {
+                                player.sendMessage(ChatColor.RED + ReportWrong.RW + "管理员不能举报!");
                             }
 //                            CoolDown ls;
 //                            listIterator = list.listIterator();
