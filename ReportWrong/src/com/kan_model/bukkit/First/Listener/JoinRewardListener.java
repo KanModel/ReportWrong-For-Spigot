@@ -43,9 +43,10 @@ public class JoinRewardListener implements Listener{
             ResultSet resultSet = statement.executeQuery("SELECT * FROM rewardList WHERE complete = 0;");
 
             while (resultSet.next()){
-                if (resultSet.getInt("complete") == 1) {
+                if (resultSet.getInt("complete") == 0) {
                     String name = resultSet.getString("name");
                     String item = co.getString("RewardItem").toUpperCase();
+                    int id = resultSet.getInt("id");
 //                rewardPlayer.getInventory().addItem(
 //                        new ItemStack(Material.getMaterial(item),co.getInt("RewardCount")));
                     if (playerName.equalsIgnoreCase(name)) {
@@ -63,6 +64,8 @@ public class JoinRewardListener implements Listener{
                             resultSet = statement.executeQuery("SELECT * FROM rewardList WHERE complete = 0;");
                             SaveSql.setRewardCompleted(resultSet, resultSet.getInt("complete"));
                         }
+                        statement.executeUpdate("UPDATE rewardList SET complete = 1 WHERE id =" + id );
+//                        statement.executeUpdate("UPDATE rwlist SET complete = 1 WHERE id = " + id);
                     }
                 }
             }

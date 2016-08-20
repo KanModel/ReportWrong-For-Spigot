@@ -235,14 +235,20 @@ public class Command implements CommandExecutor{
 ////                                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.reward"));
 //                                                } else {
                                 String item = co.getString("RewardItem").toUpperCase();
+                                int count = co.getInt("RewardCount");
 //                                                    rewardPlayer.getInventory().addItem(
 //                                                            new ItemStack(Material.getMaterial(item),co.getInt("RewardCount")));
 //                                                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.reward"));
-                                try {
-                                    ItemStack rewardItem = new ItemStack(Material.getMaterial(item),co.getInt("RewardCount"));
-                                    rewardPlayer.getWorld().dropItemNaturally(rewardPlayer.getLocation(),rewardItem);
-                                }catch (Exception e){
-                                    sender.sendMessage(ChatColor.RED + ReportWrong.RW + "错误物品名称:" + item);
+                                if (count != 0) {
+                                    try {
+                                        ItemStack rewardItem = new ItemStack(Material.getMaterial(item), co.getInt("RewardCount"));
+                                        rewardPlayer.getWorld().dropItemNaturally(rewardPlayer.getLocation(), rewardItem);
+                                        rewardPlayer.sendMessage(ChatColor.GREEN + ReportWrong.RW + "你被给予了回报！");
+                                    } catch (Exception e) {
+                                        sender.sendMessage(ChatColor.RED + ReportWrong.RW + "错误物品名称:" + item);
+                                    }
+                                }else {
+                                    rewardPlayer.sendMessage(ChatColor.RED + ReportWrong.RW + "你的举报被解决不带回报");
                                 }
 //                                                }
                             } else {
