@@ -44,6 +44,9 @@ public class OpenGUIListener implements Listener{
 //        ENCHANTED_BOOK(403, 1),
         Player player = event.getPlayer();
 //        event.getAction();
+        if (event.getItem() == null){
+            return;
+        }
         if (event.getItem().isSimilar(rwItem)) {
             mainInv = Bukkit.createInventory((InventoryHolder) player, 9,ChatColor.RED + lang.getString("gui.main"));
             if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR) {
