@@ -107,7 +107,7 @@ public class ReportWrong extends JavaPlugin {
 //    }
 
     public static void ShowHelp(CommandSender sender){
-        sender.sendMessage(ChatColor.LIGHT_PURPLE + "----------[ReportWrong]-----------");
+        sender.sendMessage(ChatColor.LIGHT_PURPLE + "][----------[ReportWrong]-----------][");
 //        sender.sendMessage(ChatColor.GOLD + lang.getString("help.1"));
 //        sender.sendMessage(ChatColor.GREEN + lang.getString("help.2"));
 //        sender.sendMessage(ChatColor.GREEN + lang.getString("help.3"));

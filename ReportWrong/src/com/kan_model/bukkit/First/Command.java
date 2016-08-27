@@ -75,6 +75,7 @@ public class Command implements CommandExecutor{
 
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String s, String[] args) {
+//        player commands
         if (sender instanceof Player){
             player = (Player) sender;
             if (s.equalsIgnoreCase("rp") || s.equalsIgnoreCase("rw") || s.equalsIgnoreCase("reportwrong")){
@@ -123,6 +124,7 @@ public class Command implements CommandExecutor{
             }else{
                 ReportWrong.ShowHelp(sender);
             }
+//            console commands
         }else {
             if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
                 Reload(sender);
@@ -130,12 +132,26 @@ public class Command implements CommandExecutor{
             }else if (args.length > 0 && args[0].equalsIgnoreCase("list")){
                 List(sender);
                 return true;
+            }else if (args.length > 0 && args[0].equalsIgnoreCase("deal")){
+                Deal(sender,args);
+                return true;
             }else if (args.length > 0 && args[0].equalsIgnoreCase("reward")){
                 Reward(sender);
                 return true;
+            }else if (args.length > 0 && args[0].equalsIgnoreCase("gui")){
+                sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + "§c" +lang.getString("consle"));
+                return true;
+            }else if (args.length > 0 && args[0].equalsIgnoreCase("item")){
+                sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + "§c" +lang.getString("consle"));
+                return true;
+            }else if (args.length > 0 && args[0].equalsIgnoreCase("check")){
+                sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + "§c" +lang.getString("consle"));
+                return true;
+            }else if (args.length > 0 && args[0].equalsIgnoreCase("version")){
+                sender.sendMessage(ChatColor.GOLD + ReportWrong.RW+ "Version:" + main.getDescription().getVersion());
+                return true;
             }else {
                 ReportWrong.ShowHelp(sender);
-                sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("consle"));
                 return true;
             }
         }
@@ -187,8 +203,12 @@ public class Command implements CommandExecutor{
     public void List(CommandSender sender){
         if (sender.hasPermission("reportwrong.list")) {
             try {
-                sender.sendMessage(ChatColor.GOLD + "---------------------------" + ReportWrong.RW + "List " + SaveSql.getUndoneCount() + "---------------------------" );
-                SaveSql.listReport(sender);
+                if (SaveSql.getUndoneCount() == 0){
+                    sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + "§c没有举报!");
+                }else {
+                    sender.sendMessage(ChatColor.GOLD + "---------------------------" + ReportWrong.RW + "List " + SaveSql.getUndoneCount() + "---------------------------");
+                    SaveSql.listReport(sender);
+                }
             }catch (Exception e){
                 e.printStackTrace();
                 sender.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
