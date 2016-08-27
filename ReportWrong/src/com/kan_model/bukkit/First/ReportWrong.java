@@ -108,16 +108,35 @@ public class ReportWrong extends JavaPlugin {
 
     public static void ShowHelp(CommandSender sender){
         sender.sendMessage(ChatColor.LIGHT_PURPLE + "][----------[ReportWrong]-----------][");
-//        sender.sendMessage(ChatColor.GOLD + lang.getString("help.1"));
-//        sender.sendMessage(ChatColor.GREEN + lang.getString("help.2"));
-//        sender.sendMessage(ChatColor.GREEN + lang.getString("help.3"));
-//        sender.sendMessage(ChatColor.GREEN + lang.getString("help.4"));
-//        sender.sendMessage(ChatColor.GREEN + lang.getString("help.5"));
-//        sender.sendMessage(ChatColor.GREEN + lang.getString("help.6"));
-//        sender.sendMessage(ChatColor.GREEN + lang.getString("help.7"));
-//        sender.sendMessage(ChatColor.GREEN + lang.getString("help.8"));
-        for (String x : lang.getStringList("help")) {
-            sender.sendMessage(ChatColor.GREEN + x);
+        /*
+        * Op's commands:list,check,deal,reload
+        * */
+        String index = "使用/reportwrong ? [n]查看第n页ReportWrong帮助！";
+//        int count = 6 + 1;
+        sender.sendMessage(ChatColor.GOLD + lang.getString("help.1"));
+        sender.sendMessage(ChatColor.GREEN + lang.getString("help.2"));
+        sender.sendMessage(ChatColor.GREEN + lang.getString("help.3"));
+        sender.sendMessage(ChatColor.GREEN + lang.getString("help.4"));
+        sender.sendMessage(ChatColor.GREEN + lang.getString("help.7"));
+        sender.sendMessage(ChatColor.GREEN + lang.getString("help.8"));
+//        for (String x : lang.getStringList("help")) {
+//            sender.sendMessage(ChatColor.GREEN + x);
+//        }
+        if (sender.hasPermission("reportwrong.list")){
+//            count ++;
+            sender.sendMessage(ChatColor.GREEN + lang.getString("help.5"));
+        }
+        if (sender.hasPermission("reportwrong.check")){
+//            count ++;
+            sender.sendMessage(ChatColor.GREEN + lang.getString("help.6"));
+        }
+        if (sender.hasPermission("reportwrong.deal")){
+//            count ++;
+            sender.sendMessage(ChatColor.GREEN + lang.getString("help.7"));
+        }
+        if (sender.hasPermission("reportwrong.reload")){
+//            count ++;
+            sender.sendMessage(ChatColor.GREEN + lang.getString("help.9"));
         }
     }
 

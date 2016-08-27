@@ -220,6 +220,10 @@ public class Command implements CommandExecutor{
 
     public void Deal(CommandSender sender,String args[]){
         if (sender.hasPermission("reportwrong.deal")) {
+            if (args.length == 1){
+                sender.sendMessage(ChatColor.RED + ReportWrong.RW + "/reportwrong deal [举报id] [空 给予回报/c 关闭]解决举报");
+                return;
+            }
             if (args.length >= 2 && isInt(args[1])) {
                 if (args.length >= 3 && args[2].equalsIgnoreCase("c")) {
                     try {
@@ -285,6 +289,8 @@ public class Command implements CommandExecutor{
                         e.printStackTrace();
                     }
                 }
+            }else {
+                sender.sendMessage(ChatColor.RED + ReportWrong.RW + "请填写真确数字ID！");
             }
         }else {
             sender.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.deal");
