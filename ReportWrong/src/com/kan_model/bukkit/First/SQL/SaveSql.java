@@ -3,6 +3,7 @@ package com.kan_model.bukkit.First.SQL;
 import com.kan_model.bukkit.First.ReportWrong;
 import com.kan_model.bukkit.First.Listener.GuiListener;
 //import com.saveSql.jdbc.Connection;
+import com.mysql.fabric.xmlrpc.base.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -12,7 +13,9 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 
 
 /**
@@ -145,6 +148,38 @@ public class SaveSql {
         }catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static ArrayList<String> listReport(){
+        try {
+            ArrayList<String> result = new ArrayList<>();
+            ResultSet resultSet;
+            resultSet = statement.executeQuery("SELECT * FROM rwlist WHERE complete = 0;");
+            String time;
+            while (resultSet.next()){
+                time = resultSet.getString("ctime");
+                int type = resultSet.getInt("Rtype");
+                String Type = null;
+                switch (type){
+                    case GuiListener.THEFT:
+                        Type = "偷窃";
+                        break;
+                    case GuiListener.DESTROY:
+                        Type = "破坏";
+                        break;
+                    case GuiListener.SBUG:
+                        Type = "Bug";
+                        break;
+                }
+                result.add(ChatColor.GREEN  + "" + resultSet.getInt("id") + " " + time + " " +
+                        resultSet.getString("name") + " 举报世界[" + resultSet.getString("world") +
+                        "] x:" + resultSet.getInt("x") + " y:" + resultSet.getInt("y") + " z:" + resultSet.getInt("z") + "发生" + Type);
+            }
+            return result;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static ResultSet checkReport(int id) throws SQLException {

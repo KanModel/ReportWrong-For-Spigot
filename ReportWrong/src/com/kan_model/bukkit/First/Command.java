@@ -96,7 +96,12 @@ public class Command implements CommandExecutor{
                         player.openInventory(mainInv);
                         return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("list")){
-                        List(player);
+                        List(player,args);
+                        /*if (args.length > 1 && isInt(args[1])){
+
+                        }else if (args.length > 1 && !(isInt(args[1]))){
+                            player.sendMessage(ChatColor.RED + ReportWrong.RW + "你输入[页数(数字)]!");
+                        }*/
                         return true;
                     }else if (args.length > 0 && args[0].equalsIgnoreCase("version")){
                         player.sendMessage(ChatColor.GOLD + ReportWrong.RW+ "Version:" + main.getDescription().getVersion());
@@ -130,7 +135,7 @@ public class Command implements CommandExecutor{
                 Reload(sender);
                 return true;
             }else if (args.length > 0 && args[0].equalsIgnoreCase("list")){
-                List(sender);
+                List(sender,args);
                 return true;
             }else if (args.length > 0 && args[0].equalsIgnoreCase("deal")){
                 Deal(sender,args);
@@ -200,9 +205,9 @@ public class Command implements CommandExecutor{
         }
     }
 
-    public void List(CommandSender sender){
+    public void List(CommandSender sender,String[] args){
         if (sender.hasPermission("reportwrong.list")) {
-            try {
+            /*try {
                 if (SaveSql.getUndoneCount() == 0){
                     sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + "§c没有举报!");
                 }else {
@@ -212,6 +217,13 @@ public class Command implements CommandExecutor{
             }catch (Exception e){
                 e.printStackTrace();
                 sender.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("check.failure"));
+            }*/
+            if (args.length == 1 || (args.length >1 && isInt(args[1]) && Integer.parseInt(args[1]) == 1)) {
+                listReport(SaveSql.listReport(), sender);
+            }else if (args.length > 1 && !(isInt(args[1]))){
+                player.sendMessage(ChatColor.RED + ReportWrong.RW + "请输入rw list [页数(数字)]!");
+            }else if (args.length > 1 && isInt(args[1])){
+                listReport(SaveSql.listReport(),sender, Integer.parseInt(args[1]));
             }
         }else {
             sender.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.list");
@@ -366,5 +378,80 @@ public class Command implements CommandExecutor{
             player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("permission.not") + "reportwrong.check");
 //            return true;
         }
+    }
+
+    public void listReport(ArrayList<String> list,CommandSender sender){
+        /*
+        * 10line
+        * 1 title
+        * 8 content
+        * 1 page info
+        * */
+        int count = list.size();
+        int page = pageCount(count);
+        if (count == 0){
+            sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + "§c没有举报!");
+        }else {
+            sender.sendMessage(ChatColor.GOLD + "---------------------------" + ReportWrong.RW + "List " + count + "---------------------------");
+            if (count > 9){
+//                int page = count/8;
+                for (int i = 0;i < 8;i++){
+                    sender.sendMessage(list.get(i));
+                }
+                sender.sendMessage(ChatColor.GREEN + "这是第1页共" + page + "页.");
+            }else {
+                for (String s:list){
+                    sender.sendMessage(s);
+                }
+            }
+        }
+//        sender.sendMessage(String.valueOf(count));
+    }
+
+    public void listReport(ArrayList<String> list,CommandSender sender,int p){
+        /*
+        * 10line
+        * 1 title
+        * 8 content
+        * 1 page info
+        * */
+        int count = list.size();
+        int page = pageCount(count);
+        if (p > page){
+            sender.sendMessage(ChatColor.RED + "请输入正确页数!");
+        }else {
+            if (count == 0) {
+                sender.sendMessage(ChatColor.GREEN + ReportWrong.RW + "§c没有举报!");
+            } else {
+                sender.sendMessage(ChatColor.GOLD + "---------------------------" + ReportWrong.RW + "List " + count + "---------------------------");
+                if (count > 9) {
+//                    int page = count / 8;
+//                    int page = (int) Math.ceil(count / 8);
+                    if (p * 8 < list.size()) {
+                        for (int i = (p - 1) * 8; i < p * 8; i++) {
+                            sender.sendMessage(list.get(i));
+                        }
+                    } else {
+                        for (int i = p * 8 - 8; i < list.size(); i++) {
+                            sender.sendMessage(list.get(i));
+                        }
+                    }
+                    sender.sendMessage(ChatColor.GREEN + "这是第" + p + "页共" + page + "页.");
+                } else {
+                    for (String s : list) {
+                        sender.sendMessage(s);
+                    }
+                }
+            }
+        }
+//        sender.sendMessage(String.valueOf(count));
+    }
+
+    private int pageCount(int count){
+        int page = count/8;
+        if (count%8 >0){
+            page++;
+        }
+        return page;
     }
 }
