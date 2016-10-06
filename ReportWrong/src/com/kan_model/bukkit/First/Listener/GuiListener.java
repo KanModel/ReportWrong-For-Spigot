@@ -31,7 +31,8 @@ public class GuiListener implements Listener{
     public static final int SBUG = 3;
     private int Type = 0;
     private FileConfiguration lang = ReportWrong.getLang();
-    private static Type untiType;
+//    private static Type untiType;
+    private static final HashMap<Player,Type> Link = new HashMap();
 //    private LinkedList<CoolDown> list;
 //    private ListIterator<CoolDown> listIterator;
     private ReportWrong main;
@@ -63,7 +64,8 @@ public class GuiListener implements Listener{
                         confirmInv.setItem(8, Command.getConfirmChest()[2]);
                         player.openInventory(confirmInv);
                         player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.confirm.theft"));
-                        untiType = new Type(THEFT,player);
+//                        untiType = new Type(THEFT,player);
+                        Link.put(player,new Type(THEFT,player));
                     } else if (targetItem.isSimilar(Command.getMainChest()[1])) {
                         player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.destroy"));
                         confirmInv = Bukkit.createInventory(player, 9, ChatColor.ITALIC + lang.getString("gui.confirm"));
@@ -72,7 +74,8 @@ public class GuiListener implements Listener{
                         confirmInv.setItem(8, Command.getConfirmChest()[2]);
                         player.openInventory(confirmInv);
                         player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.confirm.destroy"));
-                        untiType = new Type(DESTROY,player);
+//                        untiType = new Type(DESTROY,player);
+                        Link.put(player,new Type(DESTROY,player));
                     } else if (targetItem.isSimilar(Command.getMainChest()[2])) {
                         player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.sbug"));
                         player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.GOLD + lang.getString("gui.m.confirm.sbug"));
@@ -81,7 +84,8 @@ public class GuiListener implements Listener{
                         confirmInv.addItem(Command.getConfirmChest()[1]);
                         confirmInv.setItem(8, Command.getConfirmChest()[2]);
                         player.openInventory(confirmInv);
-                        untiType = new Type(SBUG,player);
+//                        untiType = new Type(SBUG,player);
+                        Link.put(player,new Type(SBUG,player));
                     }
                 }
             } else if (event.getInventory().getTitle().equalsIgnoreCase(ChatColor.ITALIC + lang.getString("gui.confirm"))) {
@@ -96,8 +100,8 @@ public class GuiListener implements Listener{
 //                                int time = (int)(((Long)this.cooldown.get(player)).longValue()/1000);
                                 if(System.currentTimeMillis() - ((Long)this.cooldown.get(player)).longValue() > 1000L * main.getMyConfig().getInt("ReportCD")) {
                                     this.cooldown.remove(player);
-                                    if (untiType.getPlayer().getName().equalsIgnoreCase(player.getName())) {
-                                        addReport(player);
+                                    if (Link.containsKey(player)) {
+                                        addReportS(player);
                                     } else {
                                         player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
                                     }
@@ -110,8 +114,8 @@ public class GuiListener implements Listener{
                                 }
                             } else if(!player.isOp()) {
                                 this.cooldown.put(player, Long.valueOf(System.currentTimeMillis()));
-                                if (untiType.getPlayer().getName().equalsIgnoreCase(player.getName())) {
-                                    addReport(player);
+                                if (Link.containsKey(player)) {
+                                    addReportS(player);
                                 } else {
                                     player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
                                 }
@@ -163,7 +167,8 @@ public class GuiListener implements Listener{
 //                        int x = player.getLocation().getBlockX();
 //                        int y = player.getLocation().getBlockY();
 //                        int z = player.getLocation().getBlockZ();
-                            if (untiType.getPlayer().getName().equalsIgnoreCase(player.getName())) {
+//                            if (untiType.getPlayer().getName().equalsIgnoreCase(player.getName())) {
+                            if (Link.containsKey(player)) {
 //                            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 //                            switch (untiType.getType()) {
 //                                case THEFT:
@@ -196,7 +201,8 @@ public class GuiListener implements Listener{
 //                                    }
 //                                    break;
 //                            }
-                                untiType = new Type(untiType.getType(),player,true);
+//                                untiType = new Type(untiType.getType(),player,true);
+                                Link.put(player,new Type(Link.get(player).getType(),player,true));
                             } else {
                                 player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
                             }
@@ -210,10 +216,10 @@ public class GuiListener implements Listener{
         }
     }
 
-    public static com.kan_model.bukkit.First.util.Type getUntiType() {
+    /*public static com.kan_model.bukkit.First.util.Type getUntiType() {
         return untiType;
-    }
-
+    }*/
+/*
     public void addReport(Player player) throws Exception{
         player.closeInventory();
         String world = player.getWorld().getName();
@@ -247,10 +253,53 @@ public class GuiListener implements Listener{
                         + lang.getString("gui.c.confirm.sbug"));
                 break;
         }
+    }*/
+
+    public void addReportS(Player player) throws Exception{
+        player.closeInventory();
+        String world = player.getWorld().getName();
+        int x = player.getLocation().getBlockX();
+        int y = player.getLocation().getBlockY();
+        int z = player.getLocation().getBlockZ();
+        String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        int type = Link.get(player).getType();
+        switch (type) {
+            case THEFT:
+                player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time
+                        + lang.getString("gui.c.confirm.theft")
+                        + world + " [X]:" + x + " [Y]:" + y + " [Z]:" + z);
+                if (!(SaveSql.addReport(player.getName(), world, x, y, z, type, time))){
+                    player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
+                }else {
+                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + "举报完成！");
+                }
+                Link.remove(player);
+                break;
+            case DESTROY:
+                player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time
+                        + lang.getString("gui.c.confirm.destroy")
+                        + world + " [X]:" + x + " [Y]:" + y + " [Z]:" + z);
+                if (!(SaveSql.addReport(player.getName(), world, x, y, z, type, time))){
+                    player.sendMessage(ChatColor.RED + ReportWrong.RW + lang.getString("gui.c.confirm.failure"));
+                }else {
+                    player.sendMessage(ChatColor.GREEN + ReportWrong.RW + "举报完成！");
+                }
+                Link.remove(player);
+                break;
+            case SBUG:
+                player.sendMessage(ChatColor.GREEN + ReportWrong.RW + ChatColor.LIGHT_PURPLE + time
+                        + lang.getString("gui.c.confirm.sbug"));
+                break;
+        }
+
     }
 
     public static HashMap<Player, Long> getCooldown() {
         return cooldown;
+    }
+
+    public static HashMap<Player, com.kan_model.bukkit.First.util.Type> getLink() {
+        return Link;
     }
 }
 

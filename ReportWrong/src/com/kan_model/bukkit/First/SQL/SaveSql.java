@@ -182,6 +182,44 @@ public class SaveSql {
         return null;
     }
 
+    /*public static String[] listReportS(){
+        try {
+//            ArrayList<String> result = new ArrayList<>();
+            String[] result = new String[8];
+            ResultSet resultSet;
+            resultSet = statement.executeQuery("SELECT * FROM rwlist WHERE complete = 0;");
+            String time;
+            int i = 0;
+            while (resultSet.next()){
+                time = resultSet.getString("ctime");
+                int type = resultSet.getInt("Rtype");
+                String Type = null;
+                switch (type){
+                    case GuiListener.THEFT:
+                        Type = "偷窃";
+                        break;
+                    case GuiListener.DESTROY:
+                        Type = "破坏";
+                        break;
+                    case GuiListener.SBUG:
+                        Type = "Bug";
+                        break;
+                }
+                result[i++] = ChatColor.GREEN  + "" + resultSet.getInt("id") + " " + time + " " +
+                        resultSet.getString("name") + " 举报世界[" + resultSet.getString("world") +
+                        "] x:" + resultSet.getInt("x") + " y:" + resultSet.getInt("y") + " z:" + resultSet.getInt("z") + "发生" + Type;
+//                i++;
+                *//*result.add(ChatColor.GREEN  + "" + resultSet.getInt("id") + " " + time + " " +
+                        resultSet.getString("name") + " 举报世界[" + resultSet.getString("world") +
+                        "] x:" + resultSet.getInt("x") + " y:" + resultSet.getInt("y") + " z:" + resultSet.getInt("z") + "发生" + Type);*//*
+            }
+            return result;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }*/
+
     public static ResultSet checkReport(int id) throws SQLException {
         ResultSet resultSet = statement.executeQuery("SELECT * FROM rwlist WHERE id = " + id + ";");
         return resultSet;
