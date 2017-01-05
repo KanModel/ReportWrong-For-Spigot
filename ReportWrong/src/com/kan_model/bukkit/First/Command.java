@@ -358,7 +358,7 @@ public class Command implements CommandExecutor{
             if (args.length >= 2 && isInt(args[1])) {
                 try {
                     ResultSet rs = SaveSql.checkReport(Integer.parseInt(args[1]));
-                    boolean more = false;
+//                    boolean more = false;
                     String type = new String();
                     switch (rs.getInt("Rtype")){
                         case THEFT:
@@ -372,11 +372,18 @@ public class Command implements CommandExecutor{
                             break;
                     }
                     if (!(rs.getString("playerword").equalsIgnoreCase("None"))){
-                        more = true;
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.check") + "由[" + rs.getString("name") + "]举报的 [" + type + "]id:[" + rs.getInt("id") + "]");
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + "详情如下:" + ChatColor.WHITE + rs.getString("playerword"));
+//                        more = true;
+                        player.sendMessage(ChatColor.GREEN + "举报[" + rs.getInt("id") +  "]详情");
+                        player.sendMessage(ChatColor.GREEN + "举报人:" + rs.getString("name"));
+                        player.sendMessage(ChatColor.GREEN + "位置:[" + rs.getString("world") + "] x:" + rs.getInt("x") + " y:" + rs.getInt("y") + " z:" + rs.getInt("z"));
+                        player.sendMessage(ChatColor.GREEN + "玩家附言:" + ChatColor.WHITE + rs.getString("playerword"));
+
+//                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.check") + "由[" + rs.getString("name") + "]举报的 [" + type + "]id:[" + rs.getInt("id") + "]");
                     }else {
-                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.check") + "id:[" + rs.getInt("id") + "]不带详情");
+//                        player.sendMessage(ChatColor.GREEN + ReportWrong.RW + lang.getString("check.check") + "id:[" + rs.getInt("id") + "]不带详情");
+                        player.sendMessage(ChatColor.GREEN + "举报[" + rs.getInt("id") +  "]详情");
+                        player.sendMessage(ChatColor.GREEN + "举报人:" + rs.getString("name"));
+                        player.sendMessage(ChatColor.GREEN + "位置:[" + rs.getString("world") + "] x:" + rs.getInt("x") + " y:" + rs.getInt("y") + " z:" + rs.getInt("z"));
                     }
                     player.teleport(new Location(Bukkit.getWorld(rs.getString("world")), rs.getInt("x"), rs.getInt("y"), rs.getInt("z")));
                 } catch (SQLException e) {

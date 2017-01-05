@@ -21,8 +21,6 @@ import java.sql.Statement;
  * Created by kgdwhsk on 2016/8/19.
  */
 
-
-
 public class JoinRewardListener implements Listener{
 
     private Connection connection;
@@ -47,11 +45,7 @@ public class JoinRewardListener implements Listener{
                     String name = resultSet.getString("name");
                     String item = co.getString("RewardItem").toUpperCase();
                     int id = resultSet.getInt("id");
-//                rewardPlayer.getInventory().addItem(
-//                        new ItemStack(Material.getMaterial(item),co.getInt("RewardCount")));
                     if (playerName.equalsIgnoreCase(name)) {
-//                    Inventory inventory = player.getInventory();
-//                    inventory.addItem();
                         if (resultSet.getInt("rc") != 0) {
                             ItemStack rewardItem = new ItemStack(Material.getMaterial(item), co.getInt("RewardCount"));
                             player.getWorld().dropItemNaturally(player.getLocation(), rewardItem);
@@ -60,12 +54,10 @@ public class JoinRewardListener implements Listener{
                             SaveSql.setRewardCompleted(resultSet, resultSet.getInt("complete"));
                         } else {
                             player.sendMessage(ChatColor.RED + ReportWrong.RW + "你的举报被解决不带回报");
-
                             resultSet = statement.executeQuery("SELECT * FROM rewardList WHERE complete = 0;");
                             SaveSql.setRewardCompleted(resultSet, resultSet.getInt("complete"));
                         }
                         statement.executeUpdate("UPDATE rewardList SET complete = 1 WHERE id =" + id );
-//                        statement.executeUpdate("UPDATE rwlist SET complete = 1 WHERE id = " + id);
                     }
                 }
             }
